@@ -20,7 +20,8 @@ public class UserController {
 	@GetMapping("/profile")
 	public Map<String, Object> getuserDetails(
 			@RequestParam(value = "passwd", required = false, defaultValue = "null") String passwd,
-			@RequestParam(value = "userName", required = false, defaultValue = "null") String userName) {
+			@RequestParam(value = "userName", required = false, defaultValue = "null") String userName)
+			throws Exception {
 		System.out.println("userName" + userName + "    passwd " + passwd);
 		return userService.getuserDetails(userName, passwd);
 	}
