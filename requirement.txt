@@ -1,0 +1,14 @@
+software requirement:
+java1.8
+mysql1.8
+
+property file:
+microservices.properties
+user.properties
+
+set env variable 
+property_path->microservices.properties
+user_path->user.properties
+
+database
+create database marsmission and run script marsmission.sql to create schema
