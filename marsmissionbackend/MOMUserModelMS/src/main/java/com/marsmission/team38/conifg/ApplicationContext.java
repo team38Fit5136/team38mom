@@ -1,5 +1,7 @@
 package com.marsmission.team38.conifg;
 
+//com.marsmission.team38.conifg
+
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
@@ -9,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.FileSystemResource;
-
 
 @Configuration
 @EnableAutoConfiguration
@@ -35,6 +36,7 @@ public class ApplicationContext {
 		InputStream inputStream = null;
 		try {
 			inputStream = new FileInputStream(propertyFilePath);
+
 			if (inputStream != null) {
 				properties.load(inputStream);
 				propertyValue = properties.getProperty(propertyName);
