@@ -21,7 +21,7 @@ public class UserController {
 	public Map<String, Object> getuserDetails(
 			@RequestParam(value = "passwd", required = false, defaultValue = "null") String passwd,
 			@RequestParam(value = "userName", required = false, defaultValue = "null") String userName) {
-
+		System.out.println("userName" + userName + "    passwd " + passwd);
 		return userService.getuserDetails(userName, passwd);
 	}
 

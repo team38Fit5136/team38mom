@@ -17,9 +17,12 @@ public class UserDao {
 		Map<String, Object> result = new HashMap<>();
 
 		try {
-			String sql = "SELECT user_name,user_email FROM user_info where user_email=" + userName
-					+ "and user_password=" + passwd;
-			result.put("status", jdbc.queryForMap(sql));
+			String sql = "SELECT user_name,user_email FROM user_info where user_email= '" + userName
+					+ "' and user_password= '" + passwd + "'";
+			System.out.println(sql);
+			result.put("status", "1");
+			result.put("respmsg", jdbc.queryForMap(sql));
+			System.out.println("*****" + jdbc.queryForMap(sql));
 			return result;
 		} catch (Exception e) {
 			result.put("status", "0");

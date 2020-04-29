@@ -17,8 +17,6 @@ public class UserServcie {
 		Map<String, Object> result = userDao.getuserdetails(userName, passwd);
 		if (result.get("status").toString().equalsIgnoreCase("0")) {
 			result.put("respmsg", "user doesnot exist with given credentials");
-		} else {
-			result.put("respmsg", result.get("status"));
 		}
 		return result;
 	}
