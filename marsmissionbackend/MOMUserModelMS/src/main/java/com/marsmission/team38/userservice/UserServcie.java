@@ -1,13 +1,14 @@
 package com.marsmission.team38.userservice;
 
+import java.io.Serializable;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.Map;
 
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.stereotype.Service;
 
 import com.marsmission.team38.userdao.UserDao;
@@ -17,60 +18,100 @@ public class UserServcie {
 	@Autowired
 	private UserDao userDao;
 
-	Cipher ecipher;
-	Cipher dcipher;
+	@Value("${user.mandatory.username}")
+	boolean usernameMandatory;
 
-	UserServcie(SecretKey key) throws Exception {
-		ecipher = Cipher.getInstance("AES");
-		dcipher = Cipher.getInstance("AES");
-		ecipher.init(Cipher.ENCRYPT_MODE, key);
-		dcipher.init(Cipher.DECRYPT_MODE, key);
+	@Value("${user.mandatory.email}")
+	boolean emailMandatory;
+
+	@Value("${user.mandatory.password}")
+	boolean passwdMandatory;
+
+	// Method for creating user
+	public Map<String, Serializable> addUser(Map<String, ?> props) {
+
+		Map<String, Serializable> result = new HashMap<>();
+		System.out.println("+++++++" + props);
+		if (!(props.containsKey("userName"))) {
+
+			result.put("status", "failed");
+			result.put("responseMsg", "error in creating user no user name given");
+			return result;
+		}
+
+		String userName = (String) (props.containsKey("userName") ? props.get("userName") : null);
+		String email = (String) (props.containsKey("email") ? props.get("email") : null);
+		String passwd = (String) (props.containsKey("passwd") ? props.get("passwd") : null);
+		long userID = 0;
+		// checks for username = first name and last name
+		if (usernameMandatory) {
+			if (userName == null && !(userName.toString().equalsIgnoreCase(""))) {
+				result.put("respmsg", "userName is mandatory that is first name and last name and cannot be empty");
+				result.put("status", "failed");
+				return result;
+			}
+		}
+
+		// checks for email
+		if (emailMandatory) {
+			if (email == null && !(email.toString().equalsIgnoreCase(""))) {
+				result.put("respmsg", "email is mandatory");
+				result.put("status", "failed");
+				return result;
+			}
+
+			if (passwdMandatory) {
+				if (passwd == null && !(passwd.toString().equalsIgnoreCase(""))) {
+					result.put("respmsg", "password is mandatory");
+					result.put("status", "failed");
+					return result;
+				}
+			}
+			String encrypted = UserServcie.encrypt(passwd);
+			try {
+				userID = (!userName.equalsIgnoreCase("") ? (userDao.adduserDAO(userName, email, encrypted)) : 0);
+
+				if (userID != 0) {
+					result.put("userID ", userID);
+					result.put("status", "success");
+					result.put("responseMsg", "successfully inserted");
+				} else {
+					result.put("status", "failed");
+					result.put("responseMsg", "Enter user name is not correct ");
+				}
+			} catch (DuplicateKeyException e) {
+				result.put("status", "failed");
+				result.put("responseMsg", "email is already present");
+			} catch (UncategorizedSQLException e) {
+				result.put("status", "failed");
+				result.put("responseMsg", "Enter data is not correct or user is already present");
+			}
+			return result;
+		}
+		return result;
+
 	}
 
-	public Map<String, Object> getuserDetails(String userName, String passwd) throws Exception {
-
-		String k = "Team38Fit5136";
-
-		// SecretKey key = KeyGenerator.getInstance("AES").generateKey();
-		SecretKey key = new SecretKeySpec(k.getBytes(), "AES");
-		UserServcie encrypter = new UserServcie(key);
-
-		System.out.println("Original String: " + passwd);
-
-		String encrypted = encrypter.encrypt(passwd);
-
-		System.out.println("Encrypted String: " + encrypted);
-
-//		String decrypted = encrypter.decrypt(encrypted);
-//
-//		System.out.println("Decrypted String: " + decrypted);
-
-		Map<String, Object> result = userDao.getuserdetails(userName, encrypted);
-		if (result.get("status").toString().equalsIgnoreCase("0")) {
+	// Method for getting user details using email as user-name and password
+	public Map<String, Serializable> getuserDetails(String userID, String passwd) {
+		String encrypted = UserServcie.encrypt(passwd);
+		Map<String, Serializable> result = userDao.getuserdetails(userID, encrypted);
+		if (result.get("status").toString().equalsIgnoreCase("failed")) {
 			result.put("respmsg", "user doesnot exist with given credentials");
 		}
 		return result;
 	}
 
-	public String encrypt(String str) throws Exception {
-		// Encode the string into bytes using utf-8
-		byte[] utf8 = str.getBytes("UTF8");
-
-		// Encrypt
-		byte[] enc = ecipher.doFinal(utf8);
-
-		// Encode bytes to base64 to get a string
-		return Base64.getEncoder().encodeToString(enc);
+	// Method for encrypting base64
+	public static String encrypt(String str) {
+		String BasicBase64format = Base64.getEncoder().encodeToString(str.getBytes());
+		return BasicBase64format;
 	}
 
-	public String decrypt(String str) throws Exception {
-		// Decode base64 to get bytes
-		byte[] dec = Base64.getDecoder().decode(str);
-
-		byte[] utf8 = dcipher.doFinal(dec);
-
-		// Decode using utf-8
-		return new String(utf8, "UTF8");
+	// Method for decrypting base64
+	public static String decrypt(String str) {
+		byte[] actualByte = Base64.getDecoder().decode(str);
+		String actualString = new String(actualByte);
+		return actualString;
 	}
-
 }
