@@ -1,9 +1,13 @@
 package com.marsmission.team38.usercontroller;
 
+import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,12 +21,18 @@ public class UserController {
 	@Autowired
 	private UserServcie userService;
 
-	@GetMapping("/profile")
-	public Map<String, Object> getuserDetails(
-			@RequestParam(value = "passwd", required = false, defaultValue = "null") String passwd,
-			@RequestParam(value = "userName", required = false, defaultValue = "null") String userName) {
-		System.out.println("userName" + userName + "    passwd " + passwd);
-		return userService.getuserDetails(userName, passwd);
+	@PostMapping("/profile")
+	public Map<String, Serializable> addUser(@RequestBody Map<String, ?> props) throws SQLException {
+
+		return userService.addUser(props);
 	}
 
+	@GetMapping("/profile")
+	public Map<String, Serializable> getuserDetails(
+			@RequestParam(value = "passwd", required = true, defaultValue = "null") String passwd,
+			@RequestParam(value = "userID", required = true, defaultValue = "null") String userID)
+			throws Exception {
+		System.out.println("userName" + userID + "    passwd " + passwd);
+		return userService.getuserDetails(userID, passwd);
+	}
 }
