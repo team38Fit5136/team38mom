@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,11 +29,19 @@ public class UserController {
 	}
 
 	@GetMapping("/profile")
-	public Map<String, Serializable> getuserDetails(
+	public Map<String, Serializable> getUserDetails(
 			@RequestParam(value = "passwd", required = true, defaultValue = "null") String passwd,
-			@RequestParam(value = "userID", required = true, defaultValue = "null") String userID)
-			throws Exception {
+			@RequestParam(value = "userID", required = true, defaultValue = "null") String userID) throws Exception {
 		System.out.println("userName" + userID + "    passwd " + passwd);
-		return userService.getuserDetails(userID, passwd);
+		return userService.getUserDetails(userID, passwd);
+	}
+
+	@PutMapping("/profile")
+	public Map<String, Serializable> updateUserDetails(
+			@RequestParam(value = "passwd", required = true, defaultValue = "null") String passwd,
+			@RequestParam(value = "userID", required = true, defaultValue = "null") String userID,
+			@RequestBody Map<String, ?> props) {
+		System.out.println("userName" + userID + "    passwd " + passwd);
+		return userService.updateUserDetails(userID, passwd);
 	}
 }
