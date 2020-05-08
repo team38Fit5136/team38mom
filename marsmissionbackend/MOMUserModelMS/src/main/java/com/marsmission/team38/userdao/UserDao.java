@@ -24,7 +24,7 @@ public class UserDao {
 	private JdbcTemplate jdbc;
 	private static Log logger = LogFactory.getLog(UserDao.class);
 
-	public Map<String, Serializable> getuserdetails(String userName, String passwd) {
+	public Map<String, Serializable> getUserdetails(String userName, String passwd) {
 		Map<String, Serializable> result = new HashMap<>();
 
 		try {
@@ -41,7 +41,7 @@ public class UserDao {
 		}
 	}
 
-	public long adduserDAO(String userName, String email, String passwd) {
+	public long addUserDAO(String userName, String email, String passwd) {
 		String sql = "insert into user_info(`user_name`,`user_email`,`user_password`) values(?,?,?)";
 		System.out.println("%%%%%%%%%%%%" + sql);
 		try {

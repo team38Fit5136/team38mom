@@ -69,7 +69,7 @@ public class UserServcie {
 			}
 			String encrypted = UserServcie.encrypt(passwd);
 			try {
-				userID = (!userName.equalsIgnoreCase("") ? (userDao.adduserDAO(userName, email, encrypted)) : 0);
+				userID = (!userName.equalsIgnoreCase("") ? (userDao.addUserDAO(userName, email, encrypted)) : 0);
 
 				if (userID != 0) {
 					result.put("userID ", userID);
@@ -93,9 +93,9 @@ public class UserServcie {
 	}
 
 	// Method for getting user details using email as user-name and password
-	public Map<String, Serializable> getuserDetails(String userID, String passwd) {
+	public Map<String, Serializable> getUserDetails(String userID, String passwd) {
 		String encrypted = UserServcie.encrypt(passwd);
-		Map<String, Serializable> result = userDao.getuserdetails(userID, encrypted);
+		Map<String, Serializable> result = userDao.getUserdetails(userID, encrypted);
 		if (result.get("status").toString().equalsIgnoreCase("failed")) {
 			result.put("respmsg", "user doesnot exist with given credentials");
 		}
@@ -113,5 +113,20 @@ public class UserServcie {
 		byte[] actualByte = Base64.getDecoder().decode(str);
 		String actualString = new String(actualByte);
 		return actualString;
+	}
+	
+	public Map<String, Serializable> updateUserDetails(String userID, String passwd) {
+		String encrypted = UserServcie.encrypt(passwd);
+		Map<String, Serializable> result = userDao.getUserdetails(userID, encrypted);
+		if (result.get("status").toString().equalsIgnoreCase("failed")) {
+			result.put("respmsg", "user doesnot exist with given credentials");
+			return result;
+		}
+		
+		else {
+			Map<String, Serializable> result1 = userDao.getUserdetails(userID, encrypted);
+		}
+		return result;
+		
 	}
 }
