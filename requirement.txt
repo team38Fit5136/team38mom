@@ -1,6 +1,6 @@
 software requirement:
 java1.8
-mysql1.8
+mysql8.0
 
 property file:
 microservices.properties
