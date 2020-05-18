@@ -26,6 +26,7 @@ public class ApplicationContext {
 		PropertySourcesPlaceholderConfigurer properties = new PropertySourcesPlaceholderConfigurer();
 		properties.setLocations(new FileSystemResource(propertyFilePath), new FileSystemResource(propertyFilePath1));
 		properties.setIgnoreResourceNotFound(false);
+		System.out.println(propertyFilePath);
 		// properties.setOrder(0);
 		return properties;
 	}

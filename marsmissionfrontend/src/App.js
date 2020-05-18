@@ -1,17 +1,15 @@
-import React, { Component } from 'react';
+import React from 'react';
+import Button from 'react-bootstrap/Button'
 
-class App  extends Component {
-  
-  constructor(props){
-    super(props);
-    this.state={
-      itme=[],
-      isloaded:false,
-    }
-  }
-componentDidMount(){
-  fetch('')
+function App(){
+return(
+  <div className="App">
+ <h2>Hello World, how are you</h2> 
+
+ <Button varitant='primary'>Bootstrap btn</Button>
+  </div>
+);
 }
 
-}
 export default App;
+ 

@@ -15,7 +15,7 @@ import com.marsmission.team38.userdao.UserDao;
 
 @Service
 public class UserServcie {
-	
+
 	@Autowired
 	private UserDao userDao;
 
@@ -27,6 +27,18 @@ public class UserServcie {
 
 	@Value("${user.mandatory.password}")
 	boolean passwdMandatory;
+
+	@Value("${user.mandatory.DOB}")
+	boolean dobMandatory;
+
+	@Value("${user.mandatory.address}")
+	boolean addressMandatory;
+
+	@Value("${user.mandatory.nationality}")
+	boolean nationalityMandatory;
+
+	@Value("${user.mandatory.gender}")
+	boolean genderMandatory;
 
 	// Method for creating user
 	public Map<String, Serializable> addUser(Map<String, ?> props) {
@@ -43,11 +55,17 @@ public class UserServcie {
 		String userName = (String) (props.containsKey("userName") ? props.get("userName") : null);
 		String email = (String) (props.containsKey("email") ? props.get("email") : null);
 		String passwd = (String) (props.containsKey("passwd") ? props.get("passwd") : null);
+		String dob = (String) (props.containsKey("dob") ? props.get("dob") : null);
+		String address = (String) (props.containsKey("address") ? props.get("address") : null);
+		String nationality = (String) (props.containsKey("nationality") ? props.get("nationality") : null);
+		String gender = (String) (props.containsKey("gender") ? props.get("gender") : null);
+
 		long userID = 0;
+
 		// checks for username = first name and last name
 		if (usernameMandatory) {
 			if (userName == null && !(userName.toString().equalsIgnoreCase(""))) {
-				result.put("respmsg", "userName is mandatory that is first name and last name and cannot be empty");
+				result.put("responseMsg", "userName is mandatory that is first name and last name and cannot be empty");
 				result.put("status", "failed");
 				return result;
 			}
@@ -56,21 +74,54 @@ public class UserServcie {
 		// checks for email
 		if (emailMandatory) {
 			if (email == null && !(email.toString().equalsIgnoreCase(""))) {
-				result.put("respmsg", "email is mandatory");
+				result.put("responseMsg", "email is mandatory");
 				result.put("status", "failed");
 				return result;
 			}
 
+			// check for password field if mandatory
 			if (passwdMandatory) {
 				if (passwd == null && !(passwd.toString().equalsIgnoreCase(""))) {
-					result.put("respmsg", "password is mandatory");
+					result.put("responseMsg", "password is mandatory");
 					result.put("status", "failed");
 					return result;
 				}
 			}
+
+			// Checks for DOB mandatory
+			if (dobMandatory) {
+				if (dob == null && !(dob.toString().equalsIgnoreCase(""))) {
+					result.put("responseMsg", "Date Of Birth is mandatory");
+					result.put("status", "failed");
+					return result;
+				}
+			}
+			if (addressMandatory) {
+				if (address == null && !(address.toString().equalsIgnoreCase(""))) {
+					result.put("responseMsg", "address is mandatory");
+					result.put("status", "failed");
+					return result;
+				}
+			}
+			if (nationalityMandatory) {
+				if (nationality == null && !(nationality.toString().equalsIgnoreCase(""))) {
+					result.put("responseMsg", "nationality is mandatory");
+					result.put("status", "failed");
+					return result;
+				}
+			}
+
+			if (genderMandatory) {
+				if (gender == null && !(gender.toString().equalsIgnoreCase(""))) {
+					result.put("responseMsg", "gender is mandatory");
+					result.put("status", "failed");
+					return result;
+				}
+			}
+
 			String encrypted = UserServcie.encrypt(passwd);
 			try {
-				userID = (!userName.equalsIgnoreCase("") ? (userDao.addUserDAO(userName, email, encrypted)) : 0);
+				userID = (!userName.equalsIgnoreCase("") ? (userDao.addUserDAO(props, encrypted)) : 0);
 
 				if (userID != 0) {
 					result.put("userID ", userID);
@@ -98,7 +149,7 @@ public class UserServcie {
 		String encrypted = UserServcie.encrypt(passwd);
 		Map<String, Serializable> result = userDao.getUserdetails(userID, encrypted);
 		if (result.get("status").toString().equalsIgnoreCase("failed")) {
-			result.put("respmsg", "user doesnot exist with given credentials");
+			result.put("responseMsg", "user doesnot exist with given credentials");
 		}
 		return result;
 	}
@@ -115,19 +166,17 @@ public class UserServcie {
 		String actualString = new String(actualByte);
 		return actualString;
 	}
-	
-	public Map<String, Serializable> updateUserDetails(String userID, String passwd) {
-		String encrypted = UserServcie.encrypt(passwd);
-		Map<String, Serializable> result = userDao.getUserdetails(userID, encrypted);
+
+	public Map<String, Serializable> updateUserDetails(String userID, Map props) {
+
+		Map<String, Serializable> result = userDao.updatedetails(userID, props);
 		if (result.get("status").toString().equalsIgnoreCase("failed")) {
-			result.put("respmsg", "user doesnot exist with given credentials");
-			return result;
+			result.put("responseMsg", "failed to update with given credentials");
 		}
-		
 		else {
-			Map<String, Serializable> result1 = userDao.getUserdetails(userID, encrypted);
+			result.put("responseMsg", "successfully update with given credentials");
 		}
 		return result;
-		
+
 	}
 }

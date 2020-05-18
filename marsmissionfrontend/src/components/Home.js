@@ -1,0 +1,1 @@
+import Reeact,{Component} from 'react';

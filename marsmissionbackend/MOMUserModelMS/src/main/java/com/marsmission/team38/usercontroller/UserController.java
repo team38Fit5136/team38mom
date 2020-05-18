@@ -38,10 +38,9 @@ public class UserController {
 
 	@PutMapping("/profile")
 	public Map<String, Serializable> updateUserDetails(
-			@RequestParam(value = "passwd", required = true, defaultValue = "null") String passwd,
-			@RequestParam(value = "userID", required = true, defaultValue = "null") String userID,
+			@RequestParam(value = "userID", required = true) String userID,
 			@RequestBody Map<String, ?> props) {
-		System.out.println("userName" + userID + "    passwd " + passwd);
-		return userService.updateUserDetails(userID, passwd);
+		System.out.println("userName" + userID);
+		return userService.updateUserDetails(userID, props);
 	}
 }
