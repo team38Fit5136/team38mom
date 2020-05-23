@@ -1,4 +1,4 @@
-package com.marsmission.team38.usercontroller;
+package com.marsmission.team38.missionController;
 
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -13,27 +13,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.marsmission.team38.userservice.UserServcie;
+import com.marsmission.team38.missionService.MissionServcie;
 
 @RestController
-@RequestMapping("/mom/user")
-public class UserController {
+@RequestMapping("/mom/mission")
+public class MissionController {
 
 	@Autowired
-	private UserServcie userService;
+	private MissionServcie missionService;
 
 	@PostMapping("/profile")
-	public Map<String, Serializable> addUser(@RequestBody Map<String, ?> props) throws SQLException {
+	public Map<String, Serializable> addMission(@RequestBody Map<String, ?> props) throws SQLException {
 
-		return userService.addUser(props);
+		return MissionService.addMission(props);
 	}
 
 	@GetMapping("/profile")
-	public Map<String, Serializable> getUserDetails(
+	public Map<String, Serializable> getMissionDetails(
 			@RequestParam(value = "passwd", required = true, defaultValue = "null") String passwd,
-			@RequestParam(value = "userID", required = true, defaultValue = "null") String userID) throws Exception {
-		System.out.println("userName" + userID + "    passwd " + passwd);
-		return userService.getUserDetails(userID, passwd);
+			@RequestParam(value = "MissionID", required = true, defaultValue = "null") String MissionID) throws Exception {
+		System.out.println("MissionName" + MissionID + "    passwd " + passwd);
+		return MissionService.getMissionDetails(userID, passwd);
 	}
 
 	@PutMapping("/profile")

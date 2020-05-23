@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.3.0.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.marsmission</groupId>
+	<artifactId>marsmissionbackend</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+		<packaging>pom</packaging>
+	<name>marsmissionbackend</name>
+	<description>project for fit5136</description>
+
+
+<!-- The order in which the modules are built -->
+	<modules>
+		<module>MOMUserModelMS</module>
+		<module>MOMMissionModelMS</module>
+	</modules>
+
+
+	<properties>
+		<!-- alfresco properties -->
+		<alfresco.version>4.2.e</alfresco.version>
+		<springframework.version>3.0.0.RELEASE</springframework.version>
+	</properties>
+
+	<build>
+		<plugins>
+			<!-- compile to target 1.8 jre -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				</plugin>
+		</plugins>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>centralrepo</id>
+			<url>http://repo2.maven.org/maven2/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+
+		<repository>
+			<id>repository.springframework.maven.milestone</id>
+			<url>http://maven.springframework.org/milestone/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>repository.springframework.maven.release</id>
+			<url>http://maven.springframework.org/release/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>centralrepo</id>
+			<url>http://repo2.maven.org/maven2/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+		<!-- <pluginRepository> -->
+		<!-- <id>cogknit</id> -->
+		<!-- <url>file:///Users/magic/.m2/repository</url> -->
+		<!-- <url>http://192.168.0.59</url> -->
+		<!-- <url>localhost</url> -->
+		<!-- <releases> -->
+		<!-- <enabled>true</enabled> -->
+		<!-- </releases> -->
+		<!-- <snapshots> -->
+		<!-- <enabled>true</enabled> -->
+		<!-- </snapshots> -->
+		<!-- </pluginRepository> -->
+		
+		<pluginRepository>
+			<id>repository.springframework.maven.milestone</id>
+			<url>http://maven.springframework.org/milestone/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>repository.springframework.maven.release</id>
+			<url>http://maven.springframework.org/release/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+</project>
+
+
