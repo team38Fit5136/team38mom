@@ -1,4 +1,4 @@
-package com.marsmission.team38.userservice;
+package com.marsmission.team38.userService;
 
 import java.io.Serializable;
 import java.util.Base64;
@@ -11,13 +11,13 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.stereotype.Service;
 
-import com.marsmission.team38.userdao.UserDao;
+import com.marsmission.team38.userDAO.UserDAO;
 
 @Service
 public class UserServcie {
 
 	@Autowired
-	private UserDao userDao;
+	private UserDAO userDao;
 
 	@Value("${user.mandatory.username}")
 	boolean usernameMandatory;

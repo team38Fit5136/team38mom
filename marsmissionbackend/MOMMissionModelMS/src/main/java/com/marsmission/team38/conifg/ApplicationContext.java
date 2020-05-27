@@ -11,7 +11,7 @@ import org.springframework.core.io.FileSystemResource;
 public class ApplicationContext {
 
 	public static String propertyFilePath = System.getenv("property_path");
-	public static String propertyFilePath1 = System.getenv("user_path");
+	public static String propertyFilePath1 = System.getenv("mission_path");
 
 //	private static Log logger = LogFactory.getLog(ApplicationContext.class);
 
@@ -24,6 +24,4 @@ public class ApplicationContext {
 		// properties.setOrder(0);
 		return properties;
 	}
-
-
 }

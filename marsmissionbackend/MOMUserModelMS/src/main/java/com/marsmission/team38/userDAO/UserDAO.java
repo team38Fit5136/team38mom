@@ -1,4 +1,4 @@
-package com.marsmission.team38.userdao;
+package com.marsmission.team38.userDAO;
 
 import java.io.Serializable;
 import java.sql.Connection;
@@ -15,14 +15,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
-public class UserDao {
+@Repository
+public class UserDAO {
 
 	@Autowired
 	private JdbcTemplate jdbc;
-	private static Log logger = LogFactory.getLog(UserDao.class);
+	private static Log logger = LogFactory.getLog(UserDAO.class);
 
 	// Adding the user details into the database in user_info table.
 	public long addUserDAO(Map props, String passwd) {

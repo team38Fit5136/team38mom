@@ -1,4 +1,4 @@
-package com.marsmission.team38.usercontroller;
+package com.marsmission.team38.userController;
 
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.marsmission.team38.userservice.UserServcie;
+import com.marsmission.team38.userService.UserServcie;
 
 @RestController
 @RequestMapping("/mom/user")
