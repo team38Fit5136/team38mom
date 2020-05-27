@@ -1,11 +1,5 @@
 package com.marsmission.team38.conifg;
 
-//com.marsmission.team38.conifg
-
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.Properties;
-
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

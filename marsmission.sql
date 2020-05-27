@@ -28,7 +28,8 @@ CREATE TABLE `cargo` (
   `cargo_mission` json DEFAULT NULL,
   `cargo_other_mission` json DEFAULT NULL,
   PRIMARY KEY (`cargo_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) 
+ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -52,7 +53,7 @@ CREATE TABLE `country` (
   `country_name` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`country_id`),
   UNIQUE KEY `country_name_UNIQUE` (`country_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -76,7 +77,7 @@ CREATE TABLE `employee` (
   `emp_title` varchar(45) DEFAULT NULL,
   `emp_number` int(11) DEFAULT NULL,
   PRIMARY KEY (`emp_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -100,7 +101,7 @@ CREATE TABLE `job` (
   `job_title` varchar(45) DEFAULT NULL,
   `job_no` int(11) DEFAULT NULL,
   PRIMARY KEY (`job_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -124,7 +125,7 @@ CREATE TABLE `location` (
   `location_north` varchar(45) DEFAULT NULL,
   `location_east` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`location_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -176,7 +177,7 @@ CREATE TABLE `mission_details` (
   CONSTRAINT `location_id` FOREIGN KEY (`location_id`) REFERENCES `location` (`location_id`) ON UPDATE CASCADE,
   CONSTRAINT `shuttle_id` FOREIGN KEY (`shuttle_id`) REFERENCES `shuttle` (`shuttle_id`) ON UPDATE CASCADE,
   CONSTRAINT `status_id` FOREIGN KEY (`status_id`) REFERENCES `status` (`status_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -204,7 +205,7 @@ CREATE TABLE `shuttle` (
   `cargo_capacity` int(11) DEFAULT NULL,
   `travel_speed` int(11) DEFAULT NULL,
   PRIMARY KEY (`shuttle_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -228,7 +229,7 @@ CREATE TABLE `status` (
   `status_name` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`status_id`),
   UNIQUE KEY `status_name_UNIQUE` (`status_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -254,7 +255,7 @@ CREATE TABLE `user_info` (
   `user_password` varchar(45) NOT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `User_email_UNIQUE` (`user_email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

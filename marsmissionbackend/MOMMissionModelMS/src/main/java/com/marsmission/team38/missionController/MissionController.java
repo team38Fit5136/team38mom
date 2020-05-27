@@ -25,22 +25,9 @@ public class MissionController {
 	@PostMapping("/profile")
 	public Map<String, Serializable> addMission(@RequestBody Map<String, ?> props) throws SQLException {
 
-		return MissionService.addMission(props);
+		return null;
+//				missionService.addMission(props);
 	}
 
-	@GetMapping("/profile")
-	public Map<String, Serializable> getMissionDetails(
-			@RequestParam(value = "passwd", required = true, defaultValue = "null") String passwd,
-			@RequestParam(value = "MissionID", required = true, defaultValue = "null") String MissionID) throws Exception {
-		System.out.println("MissionName" + MissionID + "    passwd " + passwd);
-		return MissionService.getMissionDetails(userID, passwd);
-	}
 
-	@PutMapping("/profile")
-	public Map<String, Serializable> updateUserDetails(
-			@RequestParam(value = "userID", required = true) String userID,
-			@RequestBody Map<String, ?> props) {
-		System.out.println("userName" + userID);
-		return userService.updateUserDetails(userID, props);
-	}
 }
