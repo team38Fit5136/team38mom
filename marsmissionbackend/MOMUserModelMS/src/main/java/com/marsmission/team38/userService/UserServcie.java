@@ -45,12 +45,6 @@ public class UserServcie {
 
 		Map<String, Serializable> result = new HashMap<>();
 		System.out.println("+++++++" + props);
-		if (!(props.containsKey("userName"))) {
-
-			result.put("status", "failed");
-			result.put("responseMsg", "error in creating user no user name given");
-			return result;
-		}
 
 		String userName = (String) (props.containsKey("userName") ? props.get("userName") : null);
 		String email = (String) (props.containsKey("email") ? props.get("email") : null);
@@ -121,7 +115,7 @@ public class UserServcie {
 
 			String encrypted = UserServcie.encrypt(passwd);
 			try {
-				userID = (!userName.equalsIgnoreCase("") ? (userDao.addUserDAO(props, encrypted)) : 0);
+				userID = userDao.addUserDAO(props, encrypted);
 
 				if (userID != 0) {
 					result.put("userID ", userID);
@@ -172,8 +166,7 @@ public class UserServcie {
 		Map<String, Serializable> result = userDao.updatedetails(userID, props);
 		if (result.get("status").toString().equalsIgnoreCase("failed")) {
 			result.put("responseMsg", "failed to update with given credentials");
-		}
-		else {
+		} else {
 			result.put("responseMsg", "successfully update with given credentials");
 		}
 		return result;

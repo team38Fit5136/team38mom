@@ -17,92 +17,187 @@ import com.marsmission.team38.missionDAO.MissionDAO;
 public class MissionServcie {
 
 	@Autowired
-	private MissionDAO misssionDAO; /*userDao;
-	@Value("${mission.mandatory.cargo_id}")
-	@Value("${mission.mandatory.coordinator_id}")
-	@Value("${mission.mandatory.country_allowed}")
-	@Value("${mission.mandatory.country_origin}")
+	private MissionDAO misssionDAO;
+
+	@Value("${mission.mandatory.cargoID}")
+	boolean cargoIDMandatory;
+
+	@Value("${mission.mandatory.coordinatorID}")
+	boolean coordinatorIDMandatory;
+
+	@Value("${mission.mandatory.countryAllowed}")
+	boolean countryAllowedMandatory;
+
+	@Value("${mission.mandatory.countryOrigin}")
+	boolean countryOriginMandatory;
+
 	@Value("${mission.mandatory.duration}")
-	@Value("${mission.mandatory.emp_id}")
-	@Value("${mission.mandatory.job_id}")
-	@Value("${mission.mandatory.launch_date}")
-	@Value("${mission.mandatory.location_id}")
-	@Value("${mission.mandatory.mission_details}")
-	@Value("${mission.mandatory.Mission_name}")
-	@Value("${mission.mandatory.shuttle_id}")
-	@Value("${mission.mandatory.status_id}")
-	`cargo_id`, `coordinator_id`, `country_allowed`, `country_origin`, `duration`, `emp_id`, `job_id`, `launch_date`, `location_id`, `mission_details`, `mission_id`, `Mission_name`, `shuttle_id`, `status_id`
-*/
-	
+	boolean durationMandatory;
+
+	@Value("${mission.mandatory.empID}")
+	boolean empIDMandatory;
+
+	@Value("${mission.mandatory.jobID}")
+	boolean jobIDMandatory;
+
+	@Value("${mission.mandatory.launchDate}")
+	boolean launchDateMandatory;
+
+	@Value("${mission.mandatory.locationID}")
+	boolean locationIDMandatory;
+
+	@Value("${mission.mandatory.missionDetails}")
+	boolean missionDetailsMandatory;
+
+	@Value("${mission.mandatory.missionName}")
+	boolean missionNameMandatory;
+
+	@Value("${mission.mandatory.shuttleID}")
+	boolean shuttleIDMandatory;
+
+	@Value("${mission.mandatory.statusID}")
+	boolean statusIDMandatory;
 
 	// Method for creating user
-	/*
-	 * public Map<String, Serializable> addMission(Map<String, ?> props) {
-	 * 
-	 * Map<String, Serializable> result = new HashMap<>();
-	 * System.out.println("+++++++" + props); if (!(props.containsKey("userName")))
-	 * {
-	 * 
-	 * result.put("status", "failed"); result.put("responseMsg",
-	 * "error in creating user no user name given"); return result; }
-	 * 
-	 * String userName = (String) (props.containsKey("userName") ?
-	 * props.get("userName") : null); String email = (String)
-	 * (props.containsKey("email") ? props.get("email") : null); String passwd =
-	 * (String) (props.containsKey("passwd") ? props.get("passwd") : null); String
-	 * dob = (String) (props.containsKey("dob") ? props.get("dob") : null); String
-	 * address = (String) (props.containsKey("address") ? props.get("address") :
-	 * null); String nationality = (String) (props.containsKey("nationality") ?
-	 * props.get("nationality") : null); String gender = (String)
-	 * (props.containsKey("gender") ? props.get("gender") : null);
-	 * 
-	 * long userID = 0;
-	 * 
-	 * // checks for username = first name and last name if (usernameMandatory) { if
-	 * (userName == null && !(userName.toString().equalsIgnoreCase(""))) {
-	 * result.put("responseMsg",
-	 * "userName is mandatory that is first name and last name and cannot be empty"
-	 * ); result.put("status", "failed"); return result; } }
-	 * 
-	 * // checks for email if (emailMandatory) { if (email == null &&
-	 * !(email.toString().equalsIgnoreCase(""))) { result.put("responseMsg",
-	 * "email is mandatory"); result.put("status", "failed"); return result; }
-	 * 
-	 * // check for password field if mandatory if (passwdMandatory) { if (passwd ==
-	 * null && !(passwd.toString().equalsIgnoreCase(""))) {
-	 * result.put("responseMsg", "password is mandatory"); result.put("status",
-	 * "failed"); return result; } }
-	 * 
-	 * // Checks for DOB mandatory if (dobMandatory) { if (dob == null &&
-	 * !(dob.toString().equalsIgnoreCase(""))) { result.put("responseMsg",
-	 * "Date Of Birth is mandatory"); result.put("status", "failed"); return result;
-	 * } } if (addressMandatory) { if (address == null &&
-	 * !(address.toString().equalsIgnoreCase(""))) { result.put("responseMsg",
-	 * "address is mandatory"); result.put("status", "failed"); return result; } }
-	 * if (nationalityMandatory) { if (nationality == null &&
-	 * !(nationality.toString().equalsIgnoreCase(""))) { result.put("responseMsg",
-	 * "nationality is mandatory"); result.put("status", "failed"); return result; }
-	 * }
-	 * 
-	 * if (genderMandatory) { if (gender == null &&
-	 * !(gender.toString().equalsIgnoreCase(""))) { result.put("responseMsg",
-	 * "gender is mandatory"); result.put("status", "failed"); return result; } }
-	 * 
-	 * String encrypted = MissionServcie.encrypt(passwd); try { userID =
-	 * (!userName.equalsIgnoreCase("") ? (userDao.addUserDAO(props, encrypted)) :
-	 * 0);
-	 * 
-	 * if (userID != 0) { result.put("userID ", userID); result.put("status",
-	 * "success"); result.put("responseMsg", "successfully inserted"); } else {
-	 * result.put("status", "failed"); result.put("responseMsg",
-	 * "Enter user name is not correct "); } } catch (DuplicateKeyException e) {
-	 * result.put("status", "failed"); result.put("responseMsg",
-	 * "email is already present"); } catch (UncategorizedSQLException e) {
-	 * result.put("status", "failed"); result.put("responseMsg",
-	 * "Enter data is not correct or user is already present"); } return result; }
-	 * return result;
-	 * 
-	 * }
-	 */
 
+	public Map<String, Serializable> addMission(Map<String, ?> props) {
+
+		Map<String, Serializable> result = new HashMap<>();
+		System.out.println("+++++++ Mission" + props);
+		long missionID = 0;
+		int cargoID = (int) (props.containsKey("cargoID") ? props.get("cargoID") : 0);
+		int coordinatorID = (int) (props.containsKey("coordinatorID") ? props.get("coordinatorID") : 0);
+		int empID = (int) (props.containsKey("empID") ? props.get("empID") : 0);
+		int jobID = (int) (props.containsKey("jobID") ? (int) props.get("jobID") : 0);
+		int locationID = (int) (props.containsKey("locationID") ? props.get("locationID") : 0);
+		int shuttleID = (int) (props.containsKey("shuttleID") ? props.get("shuttleID") : 0);
+		int statusID = (int) (props.containsKey("statusID") ? props.get("statusID") : 0);
+
+		String countryAllowed = (String) (props.containsKey("countryAllowed") ? props.get("countryAllowed") : null);// Json
+		String countryOrigin = (String) (props.containsKey("countryOrigin") ? props.get("countryOrigin") : null);
+		String duration = (String) (props.containsKey("duration") ? props.get("duration") : null);
+		String launchDate = (String) (props.containsKey("launchDate") ? props.get("launchDate") : null);
+		String missionDetails = (String) (props.containsKey("missionDetails") ? props.get("missionDetails") : null);
+		String missionName = (String) (props.containsKey("missionName") ? props.get("missionName") : null);
+
+		// checks for username = first name and last name
+		if (cargoIDMandatory) {
+			if (cargoID == 0) {
+				result.put("responseMsg", "cargoID is mandatory for the mission");
+				result.put("status", "failed");
+				return result;
+			}
+		}
+
+		if (coordinatorIDMandatory) {
+			if (coordinatorID == 0) {
+				result.put("responseMsg", "coordinatorID is mandatory for the mission");
+				result.put("status", "failed");
+				return result;
+			}
+		}
+		if (empIDMandatory) {
+			if (empID == 0) {
+				result.put("responseMsg", "Employee ID is mandatory for the mission");
+				result.put("status", "failed");
+				return result;
+			}
+		}
+		if (jobIDMandatory) {
+			if (jobID == 0) {
+				result.put("responseMsg", "Job ID is mandatory for the mission");
+				result.put("status", "failed");
+				return result;
+			}
+		}
+		if (locationIDMandatory) {
+			if (locationID == 0) {
+				result.put("responseMsg", "Location ID is mandatory for the mission");
+				result.put("status", "failed");
+				return result;
+			}
+		}
+		if (shuttleIDMandatory) {
+			if (shuttleID == 0) {
+				result.put("responseMsg", "Shuttle ID is mandatory for the mission");
+				result.put("status", "failed");
+				return result;
+			}
+		}
+		if (shuttleIDMandatory) {
+			if (shuttleID == 0) {
+				result.put("responseMsg", "Shuttle ID is mandatory for the mission");
+				result.put("status", "failed");
+				return result;
+			}
+		}
+		if (statusIDMandatory) {
+			if (statusID == 0) {
+				result.put("responseMsg", "Status ID is mandatory for the mission");
+				result.put("status", "failed");
+				return result;
+			}
+		}
+
+		if (countryAllowedMandatory) {
+			if (countryAllowed == null && !(countryAllowed.toString().equalsIgnoreCase(""))) {
+				result.put("responseMsg", "Country Allowed is mandatory for the mission");
+				result.put("status", "failed");
+				return result;
+			}
+		}
+		if (countryOriginMandatory) {
+			if (countryOrigin == null && !(countryOrigin.toString().equalsIgnoreCase(""))) {
+				result.put("responseMsg", "Country of Origin is mandatory for the mission");
+				result.put("status", "failed");
+				return result;
+			}
+		}
+		if (durationMandatory) {
+			if (duration == null && !(duration.toString().equalsIgnoreCase(""))) {
+				result.put("responseMsg", "Duration is mandatory for the mission");
+				result.put("status", "failed");
+				return result;
+			}
+		}
+		if (launchDateMandatory) {
+			if (launchDate == null && !(launchDate.toString().equalsIgnoreCase(""))) {
+				result.put("responseMsg", "Launch Date is mandatory for the mission");
+				result.put("status", "failed");
+				return result;
+			}
+		}
+		if (missionDetailsMandatory) {
+			if (missionDetails == null && !(missionDetails.toString().equalsIgnoreCase(""))) {
+				result.put("responseMsg", "Mission Details is mandatory for the mission");
+				result.put("status", "failed");
+				return result;
+			}
+		}
+		if (missionNameMandatory) {
+			if (missionName == null && !(missionName.toString().equalsIgnoreCase(""))) {
+				result.put("responseMsg", "Mission Name is mandatory for the mission");
+				result.put("status", "failed");
+				return result;
+			}
+		}
+		try {
+			missionID = misssionDAO.addMissionDAO(props);
+			if (missionID != 0) {
+				result.put("userID ", missionID);
+				result.put("status", "success");
+				result.put("responseMsg", "successfully inserted");
+			} else {
+				result.put("status", "failed");
+				result.put("responseMsg", "Enter Detials is not correct ");
+			}
+		} catch (DuplicateKeyException e) {
+			result.put("status", "failed");
+			result.put("responseMsg", "Duplicate entry already present");
+		} catch (UncategorizedSQLException e) {
+			result.put("status", "failed");
+			result.put("responseMsg", "Enter data is not correct");
+		}
+		return result;
+	}
 }
