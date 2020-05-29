@@ -25,9 +25,9 @@ public class UserDAO {
 	private static Log logger = LogFactory.getLog(UserDAO.class);
 
 	// Adding the user details into the database in user_info table.
-	public long addUserDAO(Map props, String passwd) {
-		String sql = "insert into user_info(`user_name`,`user_email`,`user_password`,`date_of_birth`,`address`,`nationality`,`gender`)"
-				+ " values(?,?,?,?,?,?,?)";
+	public long addUserDAO(Map<?, ?> props, String passwd) {
+		String sql = "insert into user_info(`user_name`,`user_email`,`user_password`,`date_of_birth`,`address`,`nationality`,`gender`,`user_role`)"
+				+ " values(?,?,?,?,?,?,?,?)";
 		System.out.println("%%%%%%%%%%%%" + sql);
 		String userName = (String) (props.containsKey("userName") ? props.get("userName") : null);
 		String email = (String) (props.containsKey("email") ? props.get("email") : null);
@@ -38,6 +38,8 @@ public class UserDAO {
 		String address = (String) (props.containsKey("address") ? props.get("address") : null);
 		String nationality = (String) (props.containsKey("nationality") ? props.get("nationality") : null);
 		String gender = (String) (props.containsKey("gender") ? props.get("gender") : null);
+		String userRole = (String) (props.containsKey("userRole") ? props.get("userRole") : null);
+		
 		try {
 			final PreparedStatementCreator psc = new PreparedStatementCreator() {
 				public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
@@ -49,7 +51,7 @@ public class UserDAO {
 					ps.setString(5, address);
 					ps.setString(6, nationality);
 					ps.setString(7, gender);
-
+					ps.setString(8, userRole);
 					return ps;
 				}
 			};
@@ -87,13 +89,13 @@ public class UserDAO {
 		}
 	}
 
-	public Map<String, Serializable> updatedetails(String userID, Map props) {
+	public Map<String, Serializable> updatedetails(String userID, Map<String, ?> props) {
 
 		String sql = "update user_info set ";
 		String updateQuery = "";
 		Map<String, Serializable> result = new HashMap<>();
 
-// cannot update user name and user id
+// cannot update user name and user id and user_role
 //		if (props.containsKey("userName")) {
 //
 //			updateQuery += updateQuery.isEmpty() ? "user_name=" + props.get("userName")
@@ -126,6 +128,10 @@ public class UserDAO {
 			updateQuery += updateQuery.isEmpty() ? "`gender`= \"" + props.get("gender") + "\" "
 					: ", `gender`= \"" + props.get("gender") + "\" ";
 		}
+//		if (props.containsKey("userRole")) {
+//			updateQuery += updateQuery.isEmpty() ? "`user_role`= \"" + props.get("userRole") + "\" "
+//					: ", `user_role`= \"" + props.get("userRole") + "\" ";
+//		}
 		sql += updateQuery + " " + "where user_id = " + userID;
 
 		try {
