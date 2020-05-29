@@ -25,7 +25,7 @@ public class UserDAO {
 	private static Log logger = LogFactory.getLog(UserDAO.class);
 
 	// Adding the user details into the database in user_info table.
-	public long addUserDAO(Map<?, ?> props, String passwd) {
+	public long addUserDAO(Map<String, ?> props, String passwd) {
 		String sql = "insert into user_info(`user_name`,`user_email`,`user_password`,`date_of_birth`,`address`,`nationality`,`gender`,`user_role`)"
 				+ " values(?,?,?,?,?,?,?,?)";
 		System.out.println("%%%%%%%%%%%%" + sql);
