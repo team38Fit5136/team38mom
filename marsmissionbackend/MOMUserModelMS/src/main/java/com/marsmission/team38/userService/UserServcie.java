@@ -19,14 +19,14 @@ public class UserServcie {
 	@Autowired
 	private UserDAO userDao;
 
-	@Value("${user.mandatory.username}")
-	boolean usernameMandatory;
+	@Value("${user.mandatory.userName}")
+	boolean userNameMandatory;
 
 	@Value("${user.mandatory.email}")
 	boolean emailMandatory;
 
 	@Value("${user.mandatory.password}")
-	boolean passwdMandatory;
+	boolean passwordMandatory;
 
 	@Value("${user.mandatory.DOB}")
 	boolean dobMandatory;
@@ -39,6 +39,11 @@ public class UserServcie {
 
 	@Value("${user.mandatory.gender}")
 	boolean genderMandatory;
+	
+	@Value("${user.mandatory.userRole}")
+	boolean userRoleMandatory;
+	
+	
 
 	// Method for creating user
 	public Map<String, Serializable> addUser(Map<String, ?> props) {
@@ -53,11 +58,11 @@ public class UserServcie {
 		String address = (String) (props.containsKey("address") ? props.get("address") : null);
 		String nationality = (String) (props.containsKey("nationality") ? props.get("nationality") : null);
 		String gender = (String) (props.containsKey("gender") ? props.get("gender") : null);
-
+		String userRole = (String) (props.containsKey("userRole") ? props.get("userRole") : null);
 		long userID = 0;
 
 		// checks for username = first name and last name
-		if (usernameMandatory) {
+		if (userNameMandatory) {
 			if (userName == null && !(userName.toString().equalsIgnoreCase(""))) {
 				result.put("responseMsg", "userName is mandatory that is first name and last name and cannot be empty");
 				result.put("status", "failed");
@@ -74,7 +79,7 @@ public class UserServcie {
 			}
 
 			// check for password field if mandatory
-			if (passwdMandatory) {
+			if (passwordMandatory) {
 				if (passwd == null && !(passwd.toString().equalsIgnoreCase(""))) {
 					result.put("responseMsg", "password is mandatory");
 					result.put("status", "failed");
@@ -108,6 +113,13 @@ public class UserServcie {
 			if (genderMandatory) {
 				if (gender == null && !(gender.toString().equalsIgnoreCase(""))) {
 					result.put("responseMsg", "gender is mandatory");
+					result.put("status", "failed");
+					return result;
+				}
+			}
+			if (userRoleMandatory) {
+				if (userRole == null && !(userRole.toString().equalsIgnoreCase(""))) {
+					result.put("responseMsg", "userRole is mandatory that is admin,coordinator or candidate and cannot be empty");
 					result.put("status", "failed");
 					return result;
 				}
@@ -161,7 +173,7 @@ public class UserServcie {
 		return actualString;
 	}
 
-	public Map<String, Serializable> updateUserDetails(String userID, Map props) {
+	public Map<String, Serializable> updateUserDetails(String userID, Map<String, ?> props) {
 
 		Map<String, Serializable> result = userDao.updatedetails(userID, props);
 		if (result.get("status").toString().equalsIgnoreCase("failed")) {
