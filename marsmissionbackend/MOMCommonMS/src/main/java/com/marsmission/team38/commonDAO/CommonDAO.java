@@ -96,4 +96,24 @@ public class CommonDAO {
 		}
 
 	}
+
+	public Map<String, Serializable> getShuttleDetailsDAO(String shuttleID) {
+		// TODO Auto-generated method stub
+		logger.info("in getShuttleDetailsDAO");
+
+		Map<String, Serializable> result = new HashMap<>();
+
+		try {
+			String sql = "SELECT * FROM shuttle where (shuttle_id = '" + shuttleID + "' or shuttle_name= '" + shuttleID
+					+ "')";
+
+			result.put("status", "Success");
+			result.put("responseMsg", (Serializable) jdbc.queryForMap(sql));
+			return result;
+		} catch (Exception e) {
+			logger.error("in getShuttleDetailsDAO error" + e);
+			result.put("status", "failed");
+			return result;
+		}
+	}
 }
