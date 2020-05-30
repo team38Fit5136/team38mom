@@ -9,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,5 +43,12 @@ public class MissionController {
 		return missionService.getMissionDetailsService(missionID);
 	}
 
+	@PutMapping("")
+	public Map<String, Serializable> updateUserDetails(
+			@RequestParam(value = "missionID", required = true) String missionID,
+			@RequestBody Map<String, ?> props) {
+		logger.info("missionID" + missionID);
+		return missionService.updateMissionDetailsService(missionID, props);
+	}
 
 }

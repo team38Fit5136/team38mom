@@ -148,7 +148,7 @@ public class MissionServcie {
 				return result;
 			}
 		}
-	
+
 		if (countryAllowedMandatory) {
 			if (countryAllowed == null && !(countryAllowed.toString().equalsIgnoreCase(""))) {
 				logger.warn("Country Allowed is mandatory for the mission");
@@ -180,6 +180,7 @@ public class MissionServcie {
 				result.put("status", "failed");
 				return result;
 			}
+
 		}
 		if (missionNameMandatory) {
 			if (missionName == null && !(missionName.toString().equalsIgnoreCase(""))) {
@@ -216,11 +217,22 @@ public class MissionServcie {
 	// Method for getting mission details using missionID or missionName
 	public Map<String, Serializable> getMissionDetailsService(String missionID) {
 		logger.info("in getMissionDetailsService");
-		
+
 		Map<String, Serializable> result = missionDAO.getMissiondetailsDAO(missionID);
 		if (result.get("status").toString().equalsIgnoreCase("failed")) {
 			logger.error(" mission does not exist with given credentials");
 			result.put("responseMsg", "mission doesnot exist with given credentials");
+		}
+		return result;
+	}
+
+	public Map<String, Serializable> updateMissionDetailsService(String missionID, Map<String, ?> props) {
+		logger.info("in updateMissionDetailsService ");
+		Map<String, Serializable> result = missionDAO.updatedetailsDAO(missionID, props);
+		if (result.get("status").toString().equalsIgnoreCase("failed")) {
+			result.put("responseMsg", "failed to updated mission");
+		} else {
+			result.put("responseMsg", "successfully updated mission");
 		}
 		return result;
 	}
