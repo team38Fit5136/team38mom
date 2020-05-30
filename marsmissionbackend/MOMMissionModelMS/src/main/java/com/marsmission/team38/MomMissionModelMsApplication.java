@@ -13,11 +13,11 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @EnableSwagger2
 @ComponentScan("com.marsmission.*")
-public class MomUserModelMsApplication {
+public class MomMissionModelMsApplication {
 	static String logDirectory = ApplicationContext.getGlobalProperty("logging.file");
 
 	public static void main(String[] args) {
-		SpringApplication springApplication = new SpringApplication(MomUserModelMsApplication.class);
+		SpringApplication springApplication = new SpringApplication(MomMissionModelMsApplication.class);
 		Properties properties = new Properties();
 		properties.put("logging.file", logDirectory);
 		springApplication.setDefaultProperties(properties);

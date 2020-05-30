@@ -7,9 +7,11 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.marsmission.team38.missionService.MissionServcie;
@@ -23,11 +25,22 @@ public class MissionController {
 	@Autowired
 	private MissionServcie missionService;
 
-	@PostMapping("/profile")
+	@PostMapping("")
 	public Map<String, Serializable> addMission(@RequestBody Map<String, ?> props) throws SQLException {
 		logger.info("in addMission");
-		return null;
-//				missionService.addMission(props);
+		
+		return missionService.addMissionService(props);
+		
 	}
+
+	@GetMapping("")
+	public Map<String, Serializable> getMissionDetails(
+			@RequestParam(value = "missionID", required = true, defaultValue = "null") String missionID) throws Exception {
+
+		logger.info("in get getMissionDetails" + missionID);
+
+		return missionService.getMissionDetailsService(missionID);
+	}
+
 
 }
