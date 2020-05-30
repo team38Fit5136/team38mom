@@ -21,7 +21,7 @@ public class UserServcie {
 	private  Log logger = LogFactory.getLog(this.getClass());
 
 	@Autowired
-	private UserDAO userDao;
+	private UserDAO userDAO;
 
 	@Value("${user.mandatory.userName}")
 	boolean userNameMandatory;
@@ -138,7 +138,7 @@ public class UserServcie {
 
 			String encrypted = UserServcie.encrypt(passwd);
 			try {
-				userID = userDao.addUserDAO(props, encrypted);
+				userID = userDAO.addUserDAO(props, encrypted);
 
 				if (userID != 0) {
 					logger.info("added the user" + userID);
@@ -169,7 +169,7 @@ public class UserServcie {
 	public Map<String, Serializable> getUserDetailsService(String userID, String passwd) {
 		logger.info("in getUserDetailsService");
 		String encrypted = UserServcie.encrypt(passwd);
-		Map<String, Serializable> result = userDao.getUserdetailsDAO(userID, encrypted);
+		Map<String, Serializable> result = userDAO.getUserdetailsDAO(userID, encrypted);
 		if (result.get("status").toString().equalsIgnoreCase("failed")) {
 			logger.error("in user doesnot exist with given credentials");
 			result.put("responseMsg", "user doesnot exist with given credentials");
@@ -179,7 +179,7 @@ public class UserServcie {
 
 	public Map<String, Serializable> updateUserDetailsService(String userID, Map<String, ?> props) {
 		logger.info("in updateUserDetailsService ");
-		Map<String, Serializable> result = userDao.updatedetailsDAO(userID, props);
+		Map<String, Serializable> result = userDAO.updatedetailsDAO(userID, props);
 		if (result.get("status").toString().equalsIgnoreCase("failed")) {
 			logger.error("failed to update with given credentials");
 			result.put("responseMsg", "failed to update with given credentials");
