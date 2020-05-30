@@ -37,7 +37,7 @@ public class MissionDAO {
 		int shuttleID = (int) (props.containsKey("shuttleID") ? props.get("shuttleID") : 0);
 		int statusID = (int) (props.containsKey("statusID") ? props.get("statusID") : 1);
 		int countryOrigin = (int) (props.containsKey("countryOrigin") ? props.get("countryOrigin") : 0);
-		
+
 		String countryAllowed = (String) (props.containsKey("countryAllowed") ? props.get("countryAllowed") : null);// Json
 		String duration = (String) (props.containsKey("duration") ? props.get("duration") : null);
 		String launchDate = (String) (props.containsKey("launchDate") ? props.get("launchDate") : null);
@@ -88,6 +88,86 @@ public class MissionDAO {
 			return result;
 		} catch (Exception e) {
 			logger.error("in getMissiondetailsDAO error" + e);
+			result.put("status", "failed");
+			return result;
+		}
+	}
+
+	public Map<String, Serializable> updatedetailsDAO(String missionID, Map<String, ?> props) {
+		// TODO Auto-generated method stub
+		logger.info("updatedetailsDAO");
+		String sql = "update mission_details set ";
+		String updateQuery = "";
+		String whereclause = "";
+		
+		logger.info("missionID" + missionID + "props");
+
+		Map<String, Serializable> result = new HashMap<>();
+
+		if (props.containsKey("coordinatorID")) {
+			updateQuery += updateQuery.isEmpty() ? "`coordinator_id`= \"" + props.get("coordinatorID") + "\" "
+					: ", `coordinator_id`= \"" + props.get("coordinatorID") + "\" ";
+		}
+
+		if (props.containsKey("empID")) {
+			updateQuery += updateQuery.isEmpty() ? "`emp_id`= \"" + props.get("empID") + "\" "
+					: ", `emp_id`= \"" + props.get("empID") + "\" ";
+		}
+
+		if (props.containsKey("jobID")) {
+			updateQuery += updateQuery.isEmpty() ? "`job_id`= \"" + props.get("jobID") + "\" "
+					: ", `job_id`= \"" + props.get("jobID") + "\" ";
+		}
+
+		if (props.containsKey("locationID")) {
+			updateQuery += updateQuery.isEmpty() ? "`location_id`= \"" + props.get("locationID") + "\" "
+					: ", `location_id`= \"" + props.get("locationID") + "\" ";
+		}
+
+		if (props.containsKey("shuttleID")) {
+			updateQuery += updateQuery.isEmpty() ? "`shuttle_id`= \"" + props.get("shuttleID") + "\" "
+					: ", `shuttle_id`= \"" + props.get("shuttleID") + "\" ";
+		}
+
+		if (props.containsKey("statusID")) {
+			updateQuery += updateQuery.isEmpty() ? "`status_id`= \"" + props.get("statusID") + "\" "
+					: ", `status_id`= \"" + props.get("statusID") + "\" ";
+		}
+
+		if (props.containsKey("countryAllowed")) {
+			updateQuery += updateQuery.isEmpty() ? "`country_allowed`= \"" + props.get("countryAllowed") + "\" "
+					: ", `country_allowed`= \"" + props.get("countryAllowed") + "\" ";
+		}
+		if (props.containsKey("countryOrigin")) {
+			updateQuery += updateQuery.isEmpty() ? "`country_origin`= \"" + props.get("countryOrigin") + "\" "
+					: ", `country_origin`= \"" + props.get("countryOrigin") + "\" ";
+		}
+
+		if (props.containsKey("duration")) {
+			updateQuery += updateQuery.isEmpty() ? "`duration`= \"" + props.get("duration") + "\" "
+					: ", `duration`= \"" + props.get("duration") + "\" ";
+		}
+
+		if (props.containsKey("launchDate")) {
+			updateQuery += updateQuery.isEmpty() ? "`launch_date`= \"" + props.get("launchDate") + "\" "
+					: ", `launch_date`= \"" + props.get("launchDate") + "\" ";
+		}
+
+		if (props.containsKey("missionDetails")) {
+			updateQuery += updateQuery.isEmpty() ? "`mission_details`= \"" + props.get("missionDetails") + "\" "
+					: ", `mission_details`= \"" + props.get("missionDetails") + "\" ";
+		}
+		
+		
+		
+		sql += updateQuery + " " + "where `mission_id` = " + missionID;
+		logger.info("final sql------------" + sql);
+
+		try {
+			if (jdbc.update(sql) == 1)
+				result.put("status", "success");
+			return result;
+		} catch (Exception e) {
 			result.put("status", "failed");
 			return result;
 		}
