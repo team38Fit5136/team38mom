@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomContainer implements WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> {
 
-	@Value("${mission.server.port}")
+	@Value("${user.server.port}")
 	private int port;
 
 	@Override
