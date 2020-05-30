@@ -145,7 +145,11 @@ public class UserDAO {
 			if (jdbc.update(sql) == 1) {
 				logger.info("in updatedetailsDAO success");
 				result.put("status", "success");
+			}	else {
+				result.put("status", "failed");
+				logger.info("no update done");
 			}
+		
 			return result;
 		} catch (Exception e) {
 			logger.error("in updatedetailsDAO" + e);
