@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,28 +21,31 @@ import com.marsmission.team38.userService.UserServcie;
 @RequestMapping("/mom/user")
 public class UserController {
 
+	private  Log logger = LogFactory.getLog(this.getClass());
+	
 	@Autowired
 	private UserServcie userService;
 
 	@PostMapping("/profile")
 	public Map<String, Serializable> addUser(@RequestBody Map<String, ?> props) throws SQLException {
-
-		return userService.addUser(props);
+		logger.info("in post addUser" + props);
+		return userService.addUserService(props);
 	}
 
 	@GetMapping("/profile")
 	public Map<String, Serializable> getUserDetails(
 			@RequestParam(value = "passwd", required = true, defaultValue = "null") String passwd,
 			@RequestParam(value = "userID", required = true, defaultValue = "null") String userID) throws Exception {
-		System.out.println("userName" + userID + "    passwd " + passwd);
-		return userService.getUserDetails(userID, passwd);
+
+		logger.info("in get getUserDetails" + userID + " password " + passwd);
+
+		return userService.getUserDetailsService(userID, passwd);
 	}
 
 	@PutMapping("/profile")
-	public Map<String, Serializable> updateUserDetails(
-			@RequestParam(value = "userID", required = true) String userID,
+	public Map<String, Serializable> updateUserDetails(@RequestParam(value = "userID", required = true) String userID,
 			@RequestBody Map<String, ?> props) {
-		System.out.println("userName" + userID);
-		return userService.updateUserDetails(userID, props);
+		logger.info("in upadte updateUserDetails" + userID);
+		return userService.updateUserDetailsService(userID, props);
 	}
 }

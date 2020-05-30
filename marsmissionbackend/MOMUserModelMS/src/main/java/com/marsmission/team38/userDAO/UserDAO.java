@@ -20,15 +20,15 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class UserDAO {
 
+	private Log logger = LogFactory.getLog(this.getClass());
 	@Autowired
 	private JdbcTemplate jdbc;
-	private static Log logger = LogFactory.getLog(UserDAO.class);
 
 	// Adding the user details into the database in user_info table.
 	public long addUserDAO(Map<String, ?> props, String passwd) {
 		String sql = "insert into user_info(`user_name`,`user_email`,`user_password`,`date_of_birth`,`address`,`nationality`,`gender`,`user_role`)"
 				+ " values(?,?,?,?,?,?,?,?)";
-		System.out.println("%%%%%%%%%%%%" + sql);
+		logger.info("in addUserDAO" + sql);
 		String userName = (String) (props.containsKey("userName") ? props.get("userName") : null);
 		String email = (String) (props.containsKey("email") ? props.get("email") : null);
 
@@ -39,7 +39,7 @@ public class UserDAO {
 		String nationality = (String) (props.containsKey("nationality") ? props.get("nationality") : null);
 		String gender = (String) (props.containsKey("gender") ? props.get("gender") : null);
 		String userRole = (String) (props.containsKey("userRole") ? props.get("userRole") : null);
-		
+
 		try {
 			final PreparedStatementCreator psc = new PreparedStatementCreator() {
 				public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
@@ -62,6 +62,7 @@ public class UserDAO {
 			final long userID = holder.getKey().longValue();
 			return userID;
 		} catch (Exception e) {
+			logger.info("in addUserDAO error" + e);
 			throw e;
 
 		}
@@ -69,27 +70,31 @@ public class UserDAO {
 
 	// getting the user details from the database using user_info table and removing
 	// password field.
-	public Map<String, Serializable> getUserdetails(String userName, String passwd) {
+	public Map<String, Serializable> getUserdetailsDAO(String userName, String passwd) {
+		logger.info("in getUserdetailsDAO");
+
 		Map<String, Serializable> result = new HashMap<>();
 		Map<String, Object> queryResult = new HashMap<>();
 
 		try {
 			String sql = "SELECT * FROM user_info where (user_id = '" + userName + "' or user_email= '" + userName
 					+ "') and user_password= '" + passwd + "'";
-			System.out.println(sql);
+
 			result.put("status", "Success");
 			queryResult = jdbc.queryForMap(sql);
 			queryResult.remove("user_password");
 			result.put("responseMsg", (Serializable) queryResult);
-			System.out.println("*****" + jdbc.queryForMap(sql));
 			return result;
 		} catch (Exception e) {
+			logger.error("in getUserdetailsDAO error" + e);
 			result.put("status", "failed");
 			return result;
 		}
 	}
 
-	public Map<String, Serializable> updatedetails(String userID, Map<String, ?> props) {
+	public Map<String, Serializable> updatedetailsDAO(String userID, Map<String, ?> props) {
+
+		logger.info("in updatedetailsDAO");
 
 		String sql = "update user_info set ";
 		String updateQuery = "";
@@ -134,11 +139,17 @@ public class UserDAO {
 //		}
 		sql += updateQuery + " " + "where user_id = " + userID;
 
+		logger.info("in updatedetailsDAO" + sql);
+
 		try {
-			if (jdbc.update(sql) == 1)
+			if (jdbc.update(sql) == 1) {
+				logger.info("in updatedetailsDAO success");
 				result.put("status", "success");
+			}
 			return result;
 		} catch (Exception e) {
+			logger.error("in updatedetailsDAO" + e);
+
 			result.put("status", "failed");
 			return result;
 		}
