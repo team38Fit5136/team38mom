@@ -91,4 +91,17 @@ public class CommonServcie {
 
 	}
 
+	public Map<String, Serializable> getShuttleDetailsService(String shuttleID) {
+		// TODO Auto-generated method stub
+		logger.info("in getShuttleDetailsService");
+
+		Map<String, Serializable> result = commonDAO.getShuttleDetailsDAO(shuttleID);
+		if (result.get("status").toString().equalsIgnoreCase("failed")) {
+			logger.error(" Shuttle does not exist with given credentials");
+			result.put("responseMsg", "Shuttle does not exist with given credentials");
+		}
+		return result;
+		
+	}
+
 }

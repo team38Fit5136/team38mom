@@ -18,7 +18,7 @@ import org.apache.commons.logging.LogFactory;
 public class ApplicationContext {
 
 	public static String propertyFilePath = System.getenv("property_path");
-	public static String propertyFilePath1 = System.getenv("commonms_path");
+	public static String propertyFilePath1 = System.getenv("commons_path");
 
 	private static Log logger = LogFactory.getLog(ApplicationContext.class);
 

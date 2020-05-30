@@ -52,4 +52,12 @@ public class CommonController {
 		return commonService.deleteCountryDetailsService(countryID);
 	}
 
+	@GetMapping("/shuttle")
+	public Map<String, Serializable> getShuttleDetails(
+			@RequestParam(value = "shuttleID", required = true, defaultValue = "null") String shuttleID)
+			throws Exception {
+		logger.info("in get getShuttleDetails" + shuttleID);
+		return commonService.getShuttleDetailsService(shuttleID);
+	}
+
 }
