@@ -59,5 +59,21 @@ public class CommonController {
 		logger.info("in get getShuttleDetails" + shuttleID);
 		return commonService.getShuttleDetailsService(shuttleID);
 	}
+	
+	@PostMapping("/location")
+	public Map<String, Serializable> addLocation(@RequestBody Map<String, ?> props) throws SQLException {
+		logger.info("in addLocation");
+
+		return commonService.addLocationService(props);
+
+	}
+
+	@GetMapping("/location")
+	public Map<String, Serializable> getLocationDetails(
+			@RequestParam(value = "locationID", required = true, defaultValue = "null") String locationID)
+			throws Exception {
+		logger.info("in get getLocationDetails" + locationID);
+		return commonService.getLocationDetailsService(locationID);
+	}
 
 }

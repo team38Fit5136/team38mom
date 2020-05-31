@@ -200,7 +200,7 @@ public class MissionServcie {
 			} else {
 				logger.error("Enter Detials is not correct ");
 				result.put("status", "failed");
-				result.put("responseMsg", "Enter Detials is not correct ");
+				result.put("responseMsg", "Enter Details is not correct ");
 			}
 		} catch (DuplicateKeyException e) {
 			logger.error("Duplciate key error" + e);
@@ -229,11 +229,7 @@ public class MissionServcie {
 	public Map<String, Serializable> updateMissionDetailsService(String missionID, Map<String, ?> props) {
 		logger.info("in updateMissionDetailsService ");
 		Map<String, Serializable> result = missionDAO.updatedetailsDAO(missionID, props);
-		if (result.get("status").toString().equalsIgnoreCase("failed")) {
-			result.put("responseMsg", "failed to updated mission");
-		} else {
-			result.put("responseMsg", "successfully updated mission");
-		}
+		
 		return result;
 	}
 }
