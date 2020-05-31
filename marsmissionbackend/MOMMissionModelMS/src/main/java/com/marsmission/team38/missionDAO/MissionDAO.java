@@ -165,11 +165,22 @@ public class MissionDAO {
 
 		try {
 			if (jdbc.update(sql) == 1)
+			{
 				result.put("status", "success");
+				result.put("responseMsg", "successfully updated mission");
+				
+			}
+			else {
+				result.put("status", "failed");
+				result.put("responseMsg", "failed to updated mission, No mission present with given missionID");
+			}
 			return result;
+			
 		} catch (Exception e) {
 			result.put("status", "failed");
+			result.put("responseMsg", "failed to updated mission because of some exception");
 			return result;
 		}
+		
 	}
 }

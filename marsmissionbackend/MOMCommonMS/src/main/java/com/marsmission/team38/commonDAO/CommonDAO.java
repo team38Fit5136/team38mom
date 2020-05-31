@@ -116,4 +116,56 @@ public class CommonDAO {
 			return result;
 		}
 	}
+
+	public long addLocationDAO(Map<String, ?> props) {
+		// TODO Auto-generated method stub
+		logger.info("in addLocationDAO");
+		
+		String sql = "insert into location(`location_north`, `location_east`)"
+				+ " values(?,?)";
+
+		
+		String locationNorth = (String) (props.containsKey("locationNorth") ? props.get("locationNorth") : null);
+		String locationEast = (String) (props.containsKey("locationEast") ? props.get("locationEast") : null);
+		
+		try {
+			final PreparedStatementCreator psc = new PreparedStatementCreator() {
+				public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+					final PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+					
+					ps.setString(1, locationNorth);
+					ps.setString(2, locationEast);
+					
+					return ps;
+				}
+			};
+			// The newly generated key will be saved in this object
+			final KeyHolder holder = new GeneratedKeyHolder();
+			jdbc.update(psc, holder);
+			final long locationID = holder.getKey().longValue();
+			return locationID;
+		} catch (Exception e) {
+			logger.error(e);
+			throw e;
+		}
+	}
+
+	public Map<String, Serializable> getLocationDetailsDAO(String locationID) {
+		// TODO Auto-generated method stub
+		logger.info("in getLocationDetailsDAO");
+
+		Map<String, Serializable> result = new HashMap<>();
+
+		try {
+			String sql = "SELECT * FROM location where (location_id = '" + locationID+"')";
+
+			result.put("status", "Success");
+			result.put("responseMsg", (Serializable) jdbc.queryForMap(sql));
+			return result;
+		} catch (Exception e) {
+			logger.error("in getLocationDetailsDAO error " + e);
+			result.put("status", "failed");
+			return result;
+		}
+	}
 }
