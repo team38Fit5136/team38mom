@@ -1,62 +1,62 @@
 import React, { Component } from "react";
-// import axios from "axios";
+import axios from "axios";
 import { NavLink } from 'react-router-dom'
 
 export default class Login extends Component {
   constructor(props) {
     super(props);
 
+    //Value to be set deavlared later in form
     this.state = {
-      email: "",
+      userID: "",
       password: "",
-      loginErrors: ""
+      
     };
 
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+    // this.handleSubmit = this.handleSubmit.bind(this);
+    // this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(event) {
+  // to get the value for what user type 
+  handleChange=(event)=> {
+    const target = event.target;
+    const name = target.name;
+    const value = target.value;
+    
     this.setState({
-      [event.target.name]: event.target.value
+      [name]: value
     });
-  }
+  };
 
-  handleSubmit(event) {
-    const { email, password } = this.state;
-    /*
-        axios
-          .post(
-            "http://localhost:3001/sessions",
-            {
-              user: {
-                email: email,
-                password: password
+
+    handleSubmit=(event)=> {
+      event.preventDefault();
+      console.log('Statessdfsf',this.state);  
+          axios
+            ({
+              method:'get',
+              url:'http://localhost:8081/mom/user/profile?',
+              params:{
+                userID:15,
+                passwd:'admin1'
               }
-            },
-            { withCredentials: true }
-          )
-          .then(response => {
-            if (response.data.logged_in) {
-              this.props.handleSuccessfulAuth(response.data);
-            }
-          })
-          .catch(error => {
-            console.log("login error", error);
-          });
-        event.preventDefault();
-        */
-  }
-
+            }).then(res => console.log(res))
+            .catch(err => console.error(err))
+          
+    };
+  
   render() {
+    //  check what values are entered
+    // console.log('State',this.state);
     return (
       <div>
         <form className="m-3 d-flex justify-content-center" onSubmit={this.handleSubmit}>
           <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={this.state.email}
+            type="userID"
+            name="userID"
+            placeholder="Email or user ID"
+            // The value comes from the state declared above
+            value={this.state.userID}
             onChange={this.handleChange}
             required
           />
@@ -71,7 +71,8 @@ export default class Login extends Component {
           />
 
           <button type="submit">
-            <NavLink to="/navigation" exact>Login</NavLink>
+            {/* <NavLink to="/navigation" exact>Login</NavLink> */}
+            Login
           </button>
         </form>
       </div>
@@ -80,3 +81,19 @@ export default class Login extends Component {
 }
 
 // export default Login
+
+
+
+
+
+
+
+  // refreshList(){
+  //   fetch('http://localhost:8081/mom/user/profile?userID=15&passwd=admin1')
+  //   .then(response=> response.json())
+  //   .then(data=>{
+  //     this.setState({login:data})
+  //   });
+    
+  // }
+  

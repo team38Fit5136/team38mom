@@ -12,12 +12,14 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <h1 className="m-3 d-flex justify-content-center">Mission to Mars Portal</h1>
+        <Login />
+{/*         
         <Switch>
           <Route path="/" component={Login} exact></Route>
           <Route path="/home" component={Home} exact></Route>
           <Route path="/navigation" component={Navigation} exact></Route>
           <Route path="/createmission" component={CreateMission} exact></Route>
-        </Switch>
+        </Switch> */}
         {/* <h2>Hello World, how are you</h2>  */}
         {/* <Button varitant='primary'>Bootstrap btn</Button> */}
         {/* <Login></Login> */}
