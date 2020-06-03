@@ -27,7 +27,7 @@ public class CommonController {
 	private CommonServcie commonService;
 
 	@PostMapping("/country")
-	public Map<String, Serializable> addCountry(@RequestBody Map<String, ?> props) throws SQLException {
+	public Map<String, Serializable> addCountry(@RequestBody Map<String, ?> props){
 		logger.info("in addCountry");
 
 		return commonService.addCountryService(props);
@@ -61,7 +61,7 @@ public class CommonController {
 	}
 	
 	@PostMapping("/location")
-	public Map<String, Serializable> addLocation(@RequestBody Map<String, ?> props) throws SQLException {
+	public Map<String, Serializable> addLocation(@RequestBody Map<String, ?> props){
 		logger.info("in addLocation");
 
 		return commonService.addLocationService(props);
