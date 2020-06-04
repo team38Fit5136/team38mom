@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Multiselect } from 'multiselect-react-dropdown'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { Redirect } from 'react-router-dom';
 
 
 export default class CreateMission extends Component {
@@ -26,7 +27,8 @@ export default class CreateMission extends Component {
             employmentRequirements: [],
             jobName: '',
             jobDescription: '',
-            jobRequirements: []
+            jobRequirements: [],
+            redirect: false
         }
         this.handleInputChange = this.handleInputChange.bind(this)
         this.handleCountryOriginSelect = this.handleCountryOriginSelect.bind(this)
@@ -39,6 +41,7 @@ export default class CreateMission extends Component {
         this.handleAddEmployment = this.handleAddEmployment.bind(this)
         this.handleAddJob = this.handleAddJob.bind(this)
         this.handleDateChange = this.handleDateChange.bind(this)
+        this.handleBack = this.handleBack.bind(this)
     }
 
 
@@ -133,6 +136,12 @@ export default class CreateMission extends Component {
         })
     }
 
+    handleBack = () => {
+        this.setState({
+            redirect: true
+        })
+    }
+
     countryOptions = [
         {
             id: 'AU',
@@ -222,9 +231,13 @@ export default class CreateMission extends Component {
     ]
 
     render() {
+        if (this.state.redirect) {
+            return <Redirect push to="/navigation" />
+        }
+
         return (
             <div>
-                <h2>Create Mission</h2>
+                <h4 className="m-3 d-flex justify-content-center">Create Mission</h4>
                 <form>
                     <label>Mission Name: </label>
                     <input
@@ -333,7 +346,8 @@ export default class CreateMission extends Component {
                         onChange={e => this.handleInputChange(e)} />
                     <button onClick={this.handleAddJob}>Add Job</button>
                     <br />
-                    <button onClick={this.handleSubmit}>Submit</button>
+                    <button onClick={this.handleSubmit} style={{marginRight: "10px"}}>Submit</button>
+                    <button onClick={this.handleBack}>Back</button> 
                 </form>
             </div>
         )

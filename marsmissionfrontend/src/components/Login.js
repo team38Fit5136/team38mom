@@ -1,6 +1,7 @@
-import React, { Component } from "react";
-import axios from "axios";
+import React, { Component } from "react"
+import axios from "axios"
 import { NavLink } from 'react-router-dom'
+import AppContext from '../lib/contextLib'
 
 export default class Login extends Component {
   constructor(props) {
@@ -10,44 +11,54 @@ export default class Login extends Component {
     this.state = {
       userID: "",
       password: "",
-      
+      loginErrors: "",
+      // isAuthenticated: false,
+      // hasAuthenticated: this.hasAuthenticated
     };
 
-    // this.handleSubmit = this.handleSubmit.bind(this);
-    // this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
+  // hasAuthenticated = (isAuthenticated) => {
+  //   this.setState({ isAuthenticated })
+  // }
+
   // to get the value for what user type 
-  handleChange=(event)=> {
-    const target = event.target;
-    const name = target.name;
-    const value = target.value;
-    
+  handleChange(event) {
     this.setState({
-      [name]: value
+      [event.target.name]: event.target.value
     });
-  };
+  }
 
+  handleSubmit(e) {
+    /*
+    axios({
+      method: "get",
+      url: 'http://localhost:8081/mom/user/profile?',
+      params: {
+        userID: this.state.userID,
+        passwd: this.state.password
+      }
+    })
+    .then(response => {
+      console.log(response)
+      if (response.data.status == "Success") {
+        console.log("Authenticated")
+        this.setState({
+          isAuthenticated: true
+        })
+        // console.log(this.state)
+      }
+    })
+    .catch(err => {
+      console.log(err)
+    })
+    */
+    e.preventDefault()
+  }
 
-    handleSubmit=(event)=> {
-      event.preventDefault();
-      console.log('Statessdfsf',this.state);  
-          axios
-            ({
-              method:'get',
-              url:'http://localhost:8081/mom/user/profile?',
-              params:{
-                userID:15,
-                passwd:'admin1'
-              }
-            }).then(res => console.log(res))
-            .catch(err => console.error(err))
-          
-    };
-  
   render() {
-    //  check what values are entered
-    // console.log('State',this.state);
     return (
       <div>
         <form className="m-3 d-flex justify-content-center" onSubmit={this.handleSubmit}>
@@ -70,9 +81,9 @@ export default class Login extends Component {
             required
           />
 
-          <button type="submit">
-            {/* <NavLink to="/navigation" exact>Login</NavLink> */}
-            Login
+          <button type="submit" onClick={this.handleSubmit}>
+            <NavLink to="/navigation" exact>Login</NavLink>
+            {/* Login */}
           </button>
         </form>
       </div>
@@ -81,19 +92,3 @@ export default class Login extends Component {
 }
 
 // export default Login
-
-
-
-
-
-
-
-  // refreshList(){
-  //   fetch('http://localhost:8081/mom/user/profile?userID=15&passwd=admin1')
-  //   .then(response=> response.json())
-  //   .then(data=>{
-  //     this.setState({login:data})
-  //   });
-    
-  // }
-  

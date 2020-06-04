@@ -6,24 +6,24 @@ import Navigation from './components/Navigation'
 import CreateMission from './components/CreateMission'
 
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import { Navbar } from 'react-bootstrap';
 
 function App() {
   return (
     <BrowserRouter>
       <div className="App">
-        <h1 className="m-3 d-flex justify-content-center">Mission to Mars Portal</h1>
-        <Login />
-{/*         
+        <Navbar bg="light">
+          <h3 className="d-flex justify-content-center" style={{ marginLeft: "auto" }}>Mission to Mars Portal</h3>
+          <Button
+            style={{ marginLeft: "auto" }}
+            href="/">Logout</Button>
+        </Navbar>
         <Switch>
           <Route path="/" component={Login} exact></Route>
           <Route path="/home" component={Home} exact></Route>
           <Route path="/navigation" component={Navigation} exact></Route>
           <Route path="/createmission" component={CreateMission} exact></Route>
-        </Switch> */}
-        {/* <h2>Hello World, how are you</h2>  */}
-        {/* <Button varitant='primary'>Bootstrap btn</Button> */}
-        {/* <Login></Login> */}
-        {/* <Home></Home> */}
+        </Switch>
       </div>
     </BrowserRouter>
   );
