@@ -18,6 +18,7 @@
 
 <!-- The order in which the modules are built -->
 	<modules>
+		<module>MOMCommonMS</module>
 		<module>MOMUserModelMS</module>
 		<module>MOMMissionModelMS</module>
 	</modules>

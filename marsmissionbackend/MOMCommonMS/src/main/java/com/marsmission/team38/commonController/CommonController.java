@@ -78,4 +78,73 @@ public class CommonController {
 		return commonService.getLocationDetailsService(locationID);
 	}
 
+	//Employee
+
+	@PostMapping("/employee")
+	public Map<String, Serializable> addEmployee(@RequestBody Map<String, ?> props) {
+		logger.info("in addEmployee");
+		return commonService.addEmployeeService(props);
+	}
+
+	@GetMapping("/employee")
+	public Map<String, Serializable> getEmployeeDetails(
+			@RequestParam(value = "employeeID", required = true, defaultValue = "null") String employeeID){
+		logger.info("in get getEmployeeDetails" + employeeID);
+		return commonService.getEmployeeDetailsService(employeeID);
+	}
+
+	@DeleteMapping("/employee")
+	public Map<String, Serializable> deleteEmployeeDetails(
+			@RequestParam(value = "employeeID", required = true, defaultValue = "null") String employeeID){
+		logger.info("in get deleteEmployeeDetails" + employeeID);
+		return commonService.deleteEmployeeDetailsService(employeeID);
+	}
+
+
+	//Job
+
+	@PostMapping("/job")
+	public Map<String, Serializable> addJob(@RequestBody Map<String, ?> props){
+		logger.info("in addJob");
+		return commonService.addJobService(props);
+	}
+
+	@GetMapping("/job")
+	public Map<String, Serializable> getJobDetails(
+			@RequestParam(value = "jobID", required = true, defaultValue = "null") String jobID) {
+		logger.info("in get getJobDetails" + jobID);
+		return commonService.getJobDetailsService(jobID);
+	}
+
+	@DeleteMapping("/job")
+	public Map<String, Serializable> deleteJobDetails(
+			@RequestParam(value = "jobID", required = true, defaultValue = "null") String jobID){
+		logger.info("in get deleteJobDetails" + jobID);
+		return commonService.deleteJobDetailsService(jobID);
+	}
+
+
+	//Cargo
+
+	@PostMapping("/cargo")
+	public Map<String, Serializable> addCargo(@RequestBody Map<String, ?> props){
+		logger.info("in addCargo");
+		return commonService.addCargoService(props);
+	}
+
+
+	@GetMapping("/cargo")
+	public Map<String, Serializable> getCargoDetails(
+			@RequestParam(value = "cargoID", required = true, defaultValue = "null") String cargoID){
+		logger.info("in get getCargoDetails" + cargoID);
+		return commonService.getCargoDetailsService(cargoID);
+	}
+
+	@DeleteMapping("/cargo")
+	public Map<String, Serializable> deleteCargoDetails(
+			@RequestParam(value = "cargoID", required = true, defaultValue = "null") String cargoID) {
+		logger.info("in deleteCargoDetails" + cargoID);
+		return commonService.deleteCargoDetailsService(cargoID);
+	}
+
 }
