@@ -36,12 +36,7 @@ public class MissionServcie {
 	@Value("${mission.mandatory.duration}")
 	boolean durationMandatory;
 
-	@Value("${mission.mandatory.empID}")
-	boolean empIDMandatory;
-
-	@Value("${mission.mandatory.jobID}")
-	boolean jobIDMandatory;
-
+	
 	@Value("${mission.mandatory.launchDate}")
 	boolean launchDateMandatory;
 
@@ -70,8 +65,6 @@ public class MissionServcie {
 		long missionID = 0;
 		Integer cargoID = (int) (props.containsKey("cargoID") ? props.get("cargoID") : 0);
 		Integer coordinatorID = (int) (props.containsKey("coordinatorID") ? props.get("coordinatorID") : 0);
-		Integer empID = (int) (props.containsKey("empID") ? props.get("empID") : 0);
-		Integer jobID = (int) (props.containsKey("jobID") ? (int) props.get("jobID") : 0);
 		Integer locationID = (int) (props.containsKey("locationID") ? props.get("locationID") : 0);
 		Integer shuttleID = (int) (props.containsKey("shuttleID") ? props.get("shuttleID") : 0);
 		Integer statusID = (int) (props.containsKey("statusID") ? props.get("statusID") : 0);
@@ -96,22 +89,6 @@ public class MissionServcie {
 			if (coordinatorID == 0) {
 				logger.warn("coordinatorID is mandatory for the mission");
 				result.put("responseMsg", "coordinatorID is mandatory for the mission");
-				result.put("status", "failed");
-				return result;
-			}
-		}
-		if (empIDMandatory) {
-			if (empID == 0) {
-				logger.warn("Employee ID is mandatory for the mission");
-				result.put("responseMsg", "Employee ID is mandatory for the mission");
-				result.put("status", "failed");
-				return result;
-			}
-		}
-		if (jobIDMandatory) {
-			if (jobID == 0) {
-				logger.warn("Job ID is mandatory for the mission");
-				result.put("responseMsg", "Job ID is mandatory for the mission");
 				result.put("status", "failed");
 				return result;
 			}
@@ -150,7 +127,7 @@ public class MissionServcie {
 		}
 
 		if (countryAllowedMandatory) {
-			if (countryAllowed == null && !(countryAllowed.toString().equalsIgnoreCase(""))) {
+			if (countryAllowed == null || (countryAllowed.toString().equalsIgnoreCase(""))) {
 				logger.warn("Country Allowed is mandatory for the mission");
 				result.put("responseMsg", "Country Allowed is mandatory for the mission");
 				result.put("status", "failed");
@@ -158,7 +135,7 @@ public class MissionServcie {
 			}
 		}
 		if (durationMandatory) {
-			if (duration == null && !(duration.toString().equalsIgnoreCase(""))) {
+			if (duration == null || (duration.toString().equalsIgnoreCase(""))) {
 				logger.warn("Duration is mandatory for the mission");
 				result.put("responseMsg", "Duration is mandatory for the mission");
 				result.put("status", "failed");
@@ -166,7 +143,7 @@ public class MissionServcie {
 			}
 		}
 		if (launchDateMandatory) {
-			if (launchDate == null && !(launchDate.toString().equalsIgnoreCase(""))) {
+			if (launchDate == null || (launchDate.toString().equalsIgnoreCase(""))) {
 				logger.warn("Launch Date is mandatory for the mission");
 				result.put("responseMsg", "Launch Date is mandatory for the mission");
 				result.put("status", "failed");
@@ -174,7 +151,7 @@ public class MissionServcie {
 			}
 		}
 		if (missionDetailsMandatory) {
-			if (missionDetails == null && !(missionDetails.toString().equalsIgnoreCase(""))) {
+			if (missionDetails == null || (missionDetails.toString().equalsIgnoreCase(""))) {
 				logger.warn("Mission Details is mandatory for the mission");
 				result.put("responseMsg", "Mission Details is mandatory for the mission");
 				result.put("status", "failed");
@@ -183,7 +160,7 @@ public class MissionServcie {
 
 		}
 		if (missionNameMandatory) {
-			if (missionName == null && !(missionName.toString().equalsIgnoreCase(""))) {
+			if (missionName == null || (missionName.toString().equalsIgnoreCase(""))) {
 				logger.warn("Mission Name is mandatory for the mission");
 				result.put("responseMsg", "Mission Name is mandatory for the mission");
 				result.put("status", "failed");
