@@ -26,13 +26,11 @@ public class MissionDAO {
 
 	public long addMissionDAO(Map<String, ?> props) {
 		logger.info("in addMissionDAO");
-		String sql = "insert into mission_details(`cargo_id`, `coordinator_id`, `country_allowed`, `country_origin`, `duration`, `emp_id`, `job_id`, `launch_date`, `location_id`, `mission_details`, `mission_name`, `shuttle_id`, `status_id`)"
-				+ " values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String sql = "insert into mission_details(`cargo_id`, `coordinator_id`, `country_allowed`, `country_origin`, `duration`,  `launch_date`, `location_id`, `mission_details`, `mission_name`, `shuttle_id`, `status_id`)"
+				+ " values(?,?,?,?,?,?,?,?,?,?,?)";
 
 		int cargoID = (int) (props.containsKey("cargoID") ? props.get("cargoID") : 0);
 		int coordinatorID = (int) (props.containsKey("coordinatorID") ? props.get("coordinatorID") : 0);
-		int empID = (int) (props.containsKey("empID") ? props.get("empID") : 0);
-		int jobID = (int) (props.containsKey("jobID") ? (int) props.get("jobID") : 0);
 		int locationID = (int) (props.containsKey("locationID") ? props.get("locationID") : 0);
 		int shuttleID = (int) (props.containsKey("shuttleID") ? props.get("shuttleID") : 0);
 		int statusID = (int) (props.containsKey("statusID") ? props.get("statusID") : 1);
@@ -52,14 +50,12 @@ public class MissionDAO {
 					ps.setString(3, countryAllowed);
 					ps.setInt(4, countryOrigin);
 					ps.setString(5, duration);
-					ps.setInt(6, empID);
-					ps.setInt(7, jobID);
-					ps.setString(8, launchDate);
-					ps.setInt(9, locationID);
-					ps.setString(10, missionDetails);
-					ps.setString(11, missionName);
-					ps.setInt(12, shuttleID);
-					ps.setInt(13, statusID);
+					ps.setString(6, launchDate);
+					ps.setInt(7, locationID);
+					ps.setString(8, missionDetails);
+					ps.setString(9, missionName);
+					ps.setInt(10, shuttleID);
+					ps.setInt(11, statusID);
 					return ps;
 				}
 			};
@@ -109,16 +105,7 @@ public class MissionDAO {
 					: ", `coordinator_id`= \"" + props.get("coordinatorID") + "\" ";
 		}
 
-		if (props.containsKey("empID")) {
-			updateQuery += updateQuery.isEmpty() ? "`emp_id`= \"" + props.get("empID") + "\" "
-					: ", `emp_id`= \"" + props.get("empID") + "\" ";
-		}
-
-		if (props.containsKey("jobID")) {
-			updateQuery += updateQuery.isEmpty() ? "`job_id`= \"" + props.get("jobID") + "\" "
-					: ", `job_id`= \"" + props.get("jobID") + "\" ";
-		}
-
+		
 		if (props.containsKey("locationID")) {
 			updateQuery += updateQuery.isEmpty() ? "`location_id`= \"" + props.get("locationID") + "\" "
 					: ", `location_id`= \"" + props.get("locationID") + "\" ";

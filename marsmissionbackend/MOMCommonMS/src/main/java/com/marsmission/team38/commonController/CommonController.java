@@ -38,7 +38,7 @@ public class CommonController {
 
 	@GetMapping("/country")
 	public Map<String, Serializable> getCountryDetails(
-			@RequestParam(value = "countryID", required = true, defaultValue = "null") String countryID)
+			@RequestParam(value = "countryID", required = false, defaultValue = "null") String countryID)
 			throws Exception {
 		logger.info("in get getCountryDetails" + countryID);
 		return commonService.getCountryDetailsService(countryID);
@@ -54,6 +54,14 @@ public class CommonController {
 		return commonService.deleteCountryDetailsService(countryID);
 	}
 
+	@GetMapping("/status")
+	public Map<String, Serializable> getStatusDetails(
+			@RequestParam(value = "statusID", required = false, defaultValue = "null") String statusID)
+			throws Exception {
+		logger.info("in get getCountryDetails" + statusID);
+		return commonService.getStatusDetailsService(statusID);
+	}
+	
 	@GetMapping("/shuttle")
 	public Map<String, Serializable> getShuttleDetails(
 			@RequestParam(value = "shuttleID", required = true, defaultValue = "null") String shuttleID)

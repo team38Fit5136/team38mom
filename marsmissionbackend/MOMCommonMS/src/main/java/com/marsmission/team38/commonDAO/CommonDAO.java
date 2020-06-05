@@ -52,13 +52,15 @@ public class CommonDAO {
 		logger.info("in getCountryDetailsDAO");
 
 		Map<String, Serializable> result = new HashMap<>();
-
+		String sql = "SELECT * FROM country";
+		logger.info("countryID" + countryID);
 		try {
-			String sql = "SELECT * FROM country where (country_id = '" + countryID + "' or country_name= '" + countryID
-					+ "')";
-
+			if (!countryID.equalsIgnoreCase("null")) {
+				sql += " where (country_id = '" + countryID + "' or country_name= '" + countryID + "')";
+			}
+//			logger.info("sql" + sql);
 			result.put("status", "Success");
-			result.put("responseMsg", (Serializable) jdbc.queryForMap(sql));
+			result.put("responseMsg", (Serializable) jdbc.queryForList(sql));
 			return result;
 		} catch (Exception e) {
 			logger.error("in getCountryDetailsDAO error" + e);
@@ -81,14 +83,13 @@ public class CommonDAO {
 			if (resultCheck == 1) {
 				logger.info("in deleteCountryDetailsDAO success");
 				result.put("status", "success");
-			}
-			else {
+			} else {
 				result.put("status", "failed");
 				logger.info("no Country present with given id");
 			}
 			return result;
 		} catch (Exception e) {
-			
+
 			result.put("status", "failed");
 			logger.error("in deleteCountryDetailsDAO" + e);
 
@@ -120,22 +121,20 @@ public class CommonDAO {
 	public long addLocationDAO(Map<String, ?> props) {
 		// TODO Auto-generated method stub
 		logger.info("in addLocationDAO");
-		
-		String sql = "insert into location(`location_north`, `location_east`)"
-				+ " values(?,?)";
 
-		
+		String sql = "insert into location(`location_north`, `location_east`)" + " values(?,?)";
+
 		String locationNorth = (String) (props.containsKey("locationNorth") ? props.get("locationNorth") : null);
 		String locationEast = (String) (props.containsKey("locationEast") ? props.get("locationEast") : null);
-		
+
 		try {
 			final PreparedStatementCreator psc = new PreparedStatementCreator() {
 				public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
 					final PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-					
+
 					ps.setString(1, locationNorth);
 					ps.setString(2, locationEast);
-					
+
 					return ps;
 				}
 			};
@@ -157,7 +156,7 @@ public class CommonDAO {
 		Map<String, Serializable> result = new HashMap<>();
 
 		try {
-			String sql = "SELECT * FROM location where (location_id = '" + locationID+"')";
+			String sql = "SELECT * FROM location where (location_id = '" + locationID + "')";
 
 			result.put("status", "Success");
 			result.put("responseMsg", (Serializable) jdbc.queryForMap(sql));
@@ -169,15 +168,13 @@ public class CommonDAO {
 		}
 	}
 
-
-	//Employee
+	// Employee
 
 	public long addEmployeeDAO(Map<String, ?> props) {
 		// TODO Auto-generated method stub
 		logger.info("in addEmployeeDAO");
 
-		String sql = "insert into employee(`emp_title`, `emp_number`)"
-				+ " values(?,?)";
+		String sql = "insert into employee(`emp_title`, `emp_number`)" + " values(?,?)";
 
 		String employeeTitle = (String) (props.containsKey("employeeTitle") ? props.get("employeeTitle") : null);
 		String employeeNumber = (String) (props.containsKey("employeeNumber") ? props.get("employeeNumber") : null);
@@ -211,7 +208,7 @@ public class CommonDAO {
 		Map<String, Serializable> result = new HashMap<>();
 
 		try {
-			String sql = "SELECT * FROM employee where (emp_id = '" + employeeID+"')";
+			String sql = "SELECT * FROM employee where (emp_id = '" + employeeID + "')";
 			result.put("status", "Success");
 			result.put("responseMsg", (Serializable) jdbc.queryForMap(sql));
 			return result;
@@ -228,16 +225,14 @@ public class CommonDAO {
 
 		Map<String, Serializable> result = new HashMap<>();
 
-		String sql = "delete  FROM employee where (emp_id = '" + employeeID + "' or emp_title = '" + employeeID
-				+ "')";
+		String sql = "delete  FROM employee where (emp_id = '" + employeeID + "' or emp_title = '" + employeeID + "')";
 
 		try {
 			int resultCheck = jdbc.update(sql);
 			if (resultCheck == 1) {
 				logger.info("in deleteEmployeeyDetailsDAO success");
 				result.put("status", "success");
-			}
-			else {
+			} else {
 				result.put("status", "failed");
 				logger.info("no Employee present with given id");
 			}
@@ -252,14 +247,12 @@ public class CommonDAO {
 
 	}
 
-
-	//Job
+	// Job
 
 	public long addJobDAO(Map<String, ?> props) {
 		logger.info("in addJobDAO");
 
-		String sql = "insert into job(`job_title`, `job_no`)"
-				+ " values(?,?)";
+		String sql = "insert into job(`job_title`, `job_no`)" + " values(?,?)";
 
 		String jobTitle = (String) (props.containsKey("jobTitle") ? props.get("jobTitle") : null);
 		String jobNumber = (String) (props.containsKey("jobNumber") ? props.get("jobNumber") : null);
@@ -286,14 +279,13 @@ public class CommonDAO {
 		}
 	}
 
-
 	public Map<String, Serializable> getJobDetailsDAO(String jobID) {
 		logger.info("in getJobDetailsDAO");
 
 		Map<String, Serializable> result = new HashMap<>();
 
 		try {
-			String sql = "SELECT * FROM job where (job_id = '" + jobID +"')";
+			String sql = "SELECT * FROM job where (job_id = '" + jobID + "')";
 			result.put("status", "Success");
 			result.put("responseMsg", (Serializable) jdbc.queryForMap(sql));
 			return result;
@@ -310,16 +302,14 @@ public class CommonDAO {
 
 		Map<String, Serializable> result = new HashMap<>();
 
-		String sql = "delete  FROM job where (job_id = '" + jobID + "' or job_title = '" + jobID
-				+ "')";
+		String sql = "delete  FROM job where (job_id = '" + jobID + "' or job_title = '" + jobID + "')";
 
 		try {
 			int resultCheck = jdbc.update(sql);
 			if (resultCheck == 1) {
 				logger.info("in deleteJobDetailsDAO success");
 				result.put("status", "success");
-			}
-			else {
+			} else {
 				result.put("status", "failed");
 				logger.info("no Job present with given id");
 			}
@@ -334,17 +324,17 @@ public class CommonDAO {
 
 	}
 
-	//Cargo
+	// Cargo
 
 	public long addCargoDAO(Map<String, ?> props) {
 		logger.info("in addCargoDAO");
 
-		String sql = "insert into cargo(`cargo_journey`, `cargo_mission`,`cargo_other_mission`)"
-				+ " values(?,?,?)";
+		String sql = "insert into cargo(`cargo_journey`, `cargo_mission`,`cargo_other_mission`)" + " values(?,?,?)";
 
 		String cargoJourney = (String) (props.containsKey("cargoJourney") ? props.get("cargoJourney") : null);
 		String cargoMission = (String) (props.containsKey("cargoMission") ? props.get("cargoMission") : null);
-		String cargoOtherMission = (String) (props.containsKey("cargoOtherMission") ? props.get("cargoOtherMission") : null);
+		String cargoOtherMission = (String) (props.containsKey("cargoOtherMission") ? props.get("cargoOtherMission")
+				: null);
 
 		try {
 			final PreparedStatementCreator psc = new PreparedStatementCreator() {
@@ -375,7 +365,7 @@ public class CommonDAO {
 		Map<String, Serializable> result = new HashMap<>();
 
 		try {
-			String sql = "SELECT * FROM cargo where (cargo_id = '" + cargoID +"')";
+			String sql = "SELECT * FROM cargo where (cargo_id = '" + cargoID + "')";
 			result.put("status", "Success");
 			result.put("responseMsg", (Serializable) jdbc.queryForMap(sql));
 			return result;
@@ -399,8 +389,7 @@ public class CommonDAO {
 			if (resultCheck == 1) {
 				logger.info("in deleteCargoDetailsDAO success");
 				result.put("status", "success");
-			}
-			else {
+			} else {
 				result.put("status", "failed");
 				logger.info("no cargo present with given id");
 			}
@@ -415,6 +404,26 @@ public class CommonDAO {
 
 	}
 
+	public Map<String, Serializable> getStatusDetailsDAO(String statusID) {
+		logger.info("in getStatusDetailsDAO");
 
+		Map<String, Serializable> result = new HashMap<>();
+		String sql = "SELECT * FROM status";
+		logger.info("statusID" + statusID);
+		try {
+			if (!statusID.equalsIgnoreCase("null")) {
+				sql += " where (status_id = '" + statusID + "'";
+			}
+//			logger.info("sql" + sql);
+			result.put("status", "Success");
+			result.put("responseMsg", (Serializable) jdbc.queryForList(sql));
+			return result;
+		} catch (Exception e) {
+			logger.error("in getStatusDetailsDAO error" + e);
+			result.put("status", "failed");
+			return result;
+		}
+
+	}
 
 }

@@ -238,6 +238,7 @@ public class CommonServcie {
 
 		long jobID = 0;
 
+		
 		String jobTitle = (String) (props.containsKey("jobTitle") ? props.get("jobTitle") : null);
 		String jobNumber = (String) (props.containsKey("jobNumber") ? props.get("jobNumber") : null);
 
@@ -372,4 +373,19 @@ public class CommonServcie {
 
 	}
 
+	// Method for getting country details using countryID or countryName
+	
+		public Map<String, Serializable> getStatusDetailsService(String statusID) {
+			logger.info("in getStatusDetailsService");
+
+			Map<String, Serializable> result = commonDAO.getStatusDetailsDAO(statusID);
+			if (result.get("status").toString().equalsIgnoreCase("failed")) {
+				logger.error(" Country does not exist with given credentials");
+				result.put("responseMsg", "Country does not exist with given credentials");
+			}
+			return result;
+
+		}
+
+	
 }
