@@ -94,6 +94,9 @@ public class UserDAO {
 			queryResult = jdbc.queryForList(sql);
 			for (Map<String, Object> child : queryResult) {
 				child.remove("user_password");
+				child.put("full_name",child.get("user_name"));
+				child.remove("user_name");
+			
 			}
 			result.put("responseMsg", (Serializable) queryResult);
 			return result;
