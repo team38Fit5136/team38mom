@@ -16,6 +16,7 @@ import org.apache.commons.logging.LogFactory;
 @EnableAutoConfiguration
 public class ApplicationContext {
 
+	//variables for storing properties file path
 	public static String propertyFilePath = System.getenv("property_path");
 	public static String propertyFilePath1 = System.getenv("user_path");
 
@@ -27,6 +28,7 @@ public class ApplicationContext {
 		return properties;
 	}
 
+	//Method for getting global property
 	public static String getGlobalProperty(String propertyName) {
 		Properties properties = new Properties();
 		String propertyValue = "";
@@ -35,7 +37,7 @@ public class ApplicationContext {
 			inputStream = new FileInputStream(propertyFilePath);
 			if (inputStream != null) {
 				properties.load(inputStream);
-				propertyValue = properties.getProperty(propertyName);
+				propertyValue = properties.getProperty(propertyName); // getting property value from properties file
 			}
 
 		} catch (Exception e) {

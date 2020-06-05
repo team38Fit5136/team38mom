@@ -19,6 +19,9 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+/**
+ * The User DAO class to interact with Database
+ */
 @Repository
 public class UserDAO {
 
@@ -28,6 +31,7 @@ public class UserDAO {
 
 	// Adding the user details into the database in user_info table.
 	public long addUserDAO(Map<String, ?> props, String passwd) {
+		//sql query to add into user class
 		String sql = "insert into user_info(`user_name`,`user_email`,`user_password`,`date_of_birth`,`address`,`nationality`,`gender`,`user_role`)"
 				+ " values(?,?,?,?,?,?,?,?)";
 		logger.info("in addUserDAO" + sql);
@@ -100,6 +104,7 @@ public class UserDAO {
 		}
 	}
 
+	//Method to update user details
 	public Map<String, Serializable> updatedetailsDAO(String userID, Map<String, ?> props) {
 
 		logger.info("in updatedetailsDAO");

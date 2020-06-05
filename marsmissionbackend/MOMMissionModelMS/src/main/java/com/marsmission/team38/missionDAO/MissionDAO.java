@@ -17,13 +17,18 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+/**
+ * The Mission DAO class to interact with Database
+ */
 @Repository
 public class MissionDAO {
 
 	@Autowired
 	private JdbcTemplate jdbc;
+	//logger variable to print logs
 	private static Log logger = LogFactory.getLog(MissionDAO.class);
 
+	//adding Mission details in DB
 	public long addMissionDAO(Map<String, ?> props) {
 		logger.info("in addMissionDAO");
 		String sql = "insert into mission_details(`cargo_id`, `coordinator_id`, `country_allowed`, `country_origin`, `duration`,  `launch_date`, `location_id`, `mission_details`, `mission_name`, `shuttle_id`, `status_id`)"
@@ -70,12 +75,14 @@ public class MissionDAO {
 		}
 	}
 
+	//getting mission details from DB
 	public Map<String, Serializable> getMissiondetailsDAO(String missionID) {
 		logger.info("in getMissiondetailsDAO");
 
 		Map<String, Serializable> result = new HashMap<>();
 
 		try {
+			//creating sql query for get mission details
 			String sql = "SELECT * FROM mission_details where (mission_id = '" + missionID + "' or mission_name= '"
 					+ missionID + "')";
 
@@ -89,6 +96,7 @@ public class MissionDAO {
 		}
 	}
 
+	//updating mission details in DB
 	public Map<String, Serializable> updatedetailsDAO(String missionID, Map<String, ?> props) {
 		// TODO Auto-generated method stub
 		logger.info("updatedetailsDAO");
@@ -146,7 +154,7 @@ public class MissionDAO {
 		}
 		
 		
-		
+		//final sql query
 		sql += updateQuery + " " + "where `mission_id` = " + missionID;
 		logger.info("final sql------------" + sql);
 
@@ -161,6 +169,7 @@ public class MissionDAO {
 				result.put("status", "failed");
 				result.put("responseMsg", "failed to updated mission, No mission present with given missionID");
 			}
+			//returning the status and responseMsg
 			return result;
 			
 		} catch (Exception e) {
