@@ -31,7 +31,7 @@ public class CommonServcie {
 
 		String countryName = (String) (props.containsKey("countryName") ? props.get("countryName") : null);
 
-		if (countryName == null || !(countryName.toString().equalsIgnoreCase(""))) {
+		if (countryName == null || (countryName.toString().equalsIgnoreCase(""))) {
 			logger.warn("Country Name is mandatory to add the country");
 			result.put("responseMsg", "Country Name is mandatory to add the country");
 			result.put("status", "failed");
