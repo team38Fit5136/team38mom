@@ -36,12 +36,13 @@ public class UserController {
 
 	@GetMapping("/profile")
 	public Map<String, Serializable> getUserDetails(
-			@RequestParam(value = "passwd", required = true, defaultValue = "null") String passwd,
-			@RequestParam(value = "userID", required = true, defaultValue = "null") String userID) throws Exception {
+			@RequestParam(value = "passwd", required = false, defaultValue = "null") String passwd,
+			@RequestParam(value = "userRole", required = false, defaultValue = "null") String userRole,
+			@RequestParam(value = "userID", required = false, defaultValue = "null") String userID) throws Exception {
 
-		logger.info("in get getUserDetails" + userID + " password " + passwd);
+		logger.info("in get getUserDetails" + userID + " password " + passwd+"userRole"+userRole);
 
-		return userService.getUserDetailsService(userID, passwd);
+		return userService.getUserDetailsService(userID, passwd,userRole);
 	}
 
 	@PutMapping("/profile")

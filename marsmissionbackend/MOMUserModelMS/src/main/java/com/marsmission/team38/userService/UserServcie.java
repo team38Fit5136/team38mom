@@ -18,7 +18,7 @@ import com.marsmission.team38.userDAO.UserDAO;
 @Service
 public class UserServcie {
 
-	private  Log logger = LogFactory.getLog(this.getClass());
+	private Log logger = LogFactory.getLog(this.getClass());
 
 	@Autowired
 	private UserDAO userDAO;
@@ -166,10 +166,13 @@ public class UserServcie {
 	}
 
 	// Method for getting user details using email as user-name and password
-	public Map<String, Serializable> getUserDetailsService(String userID, String passwd) {
+	public Map<String, Serializable> getUserDetailsService(String userID, String passwd, String userRole) {
 		logger.info("in getUserDetailsService");
-		String encrypted = UserServcie.encrypt(passwd);
-		Map<String, Serializable> result = userDAO.getUserdetailsDAO(userID, encrypted);
+		String encrypted = "";
+		if (!passwd.equalsIgnoreCase("null")) {
+			encrypted = UserServcie.encrypt(passwd);
+		}
+		Map<String, Serializable> result = userDAO.getUserdetailsDAO(userID, encrypted, userRole);
 		if (result.get("status").toString().equalsIgnoreCase("failed")) {
 			logger.error("in user doesnot exist with given credentials");
 			result.put("responseMsg", "user doesnot exist with given credentials");
