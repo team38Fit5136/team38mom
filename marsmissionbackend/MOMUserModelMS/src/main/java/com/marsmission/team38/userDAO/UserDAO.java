@@ -5,7 +5,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -70,19 +72,25 @@ public class UserDAO {
 
 	// getting the user details from the database using user_info table and removing
 	// password field.
-	public Map<String, Serializable> getUserdetailsDAO(String userName, String passwd) {
+	public Map<String, Serializable> getUserdetailsDAO(String userName, String passwd, String userRole) {
 		logger.info("in getUserdetailsDAO");
 
 		Map<String, Serializable> result = new HashMap<>();
-		Map<String, Object> queryResult = new HashMap<>();
-
+		List<Map<String, Object>> queryResult = new ArrayList<Map<String, Object>>();
+		String sql = "SELECT * FROM user_info ";
 		try {
-			String sql = "SELECT * FROM user_info where (user_id = '" + userName + "' or user_email= '" + userName
-					+ "') and user_password= '" + passwd + "'";
-
+			if (!(userName.equalsIgnoreCase("null") || userName.equalsIgnoreCase(""))
+					&& !(passwd.equalsIgnoreCase("null") || passwd.equalsIgnoreCase(""))) {
+				sql += " where (user_id = '" + userName + "' or user_email= '" + userName + "') and user_password= '"
+						+ passwd + "'";
+			} else
+				sql += " where user_role = '" + userRole + "'";
+			logger.info("sql statement" + sql);
 			result.put("status", "Success");
-			queryResult = jdbc.queryForMap(sql);
-			queryResult.remove("user_password");
+			queryResult = jdbc.queryForList(sql);
+			for (Map<String, Object> child : queryResult) {
+				child.remove("user_password");
+			}
 			result.put("responseMsg", (Serializable) queryResult);
 			return result;
 		} catch (Exception e) {
@@ -145,11 +153,11 @@ public class UserDAO {
 			if (jdbc.update(sql) == 1) {
 				logger.info("in updatedetailsDAO success");
 				result.put("status", "success");
-			}	else {
+			} else {
 				result.put("status", "failed");
 				logger.info("no update done");
 			}
-		
+
 			return result;
 		} catch (Exception e) {
 			logger.error("in updatedetailsDAO" + e);
