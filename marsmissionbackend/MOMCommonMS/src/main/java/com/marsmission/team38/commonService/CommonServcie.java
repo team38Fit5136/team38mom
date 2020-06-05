@@ -16,12 +16,12 @@ import com.marsmission.team38.commonDAO.CommonDAO;
 @Service
 public class CommonServcie {
 
+	//logger variable to print logs
 	private Log logger = LogFactory.getLog(this.getClass());
 	@Autowired
 	private CommonDAO commonDAO;
 
 	// Method for creating country
-
 	public Map<String, Serializable> addCountryService(Map<String, ?> props) {
 
 		Map<String, Serializable> result = new HashMap<>();
@@ -32,7 +32,7 @@ public class CommonServcie {
 		String countryName = (String) (props.containsKey("countryName") ? props.get("countryName") : null);
 
 		if (countryName == null || (countryName.toString().equalsIgnoreCase(""))) {
-			logger.warn("Country Name is mandatory to add the country");
+			logger.warn("Country Name is mandatory to add the country"); 
 			result.put("responseMsg", "Country Name is mandatory to add the country");
 			result.put("status", "failed");
 			return result;
@@ -76,6 +76,7 @@ public class CommonServcie {
 		return result;
 	}
 
+	// Method for deleting country
 	public Map<String, Serializable> deleteCountryDetailsService(String countryID) {
 		logger.info("in updateUserDetailsService ");
 		Map<String, Serializable> result = commonDAO.deleteCountryDetailsDAO(countryID);
@@ -91,6 +92,7 @@ public class CommonServcie {
 
 	}
 
+	// Method for getting shuttle details
 	public Map<String, Serializable> getShuttleDetailsService(String shuttleID) {
 		// TODO Auto-generated method stub
 		logger.info("in getShuttleDetailsService");
@@ -104,6 +106,7 @@ public class CommonServcie {
 		
 	}
 
+	// Method for adding location 
 	public Map<String, Serializable> addLocationService(Map<String, ?> props) {
 		// TODO Auto-generated method stub
 		Map<String, Serializable> result = new HashMap<>();
@@ -146,6 +149,7 @@ public class CommonServcie {
 		return result;
 	}
 
+	// Method for getting location
 	public Map<String, Serializable> getLocationDetailsService(String locationID) {
 		// TODO Auto-generated method stub
 		logger.info("in getLocationDetailsService");
@@ -159,7 +163,7 @@ public class CommonServcie {
 	}
 
 	//Employee
-
+	// Method for adding employee
 	public Map<String, Serializable> addEmployeeService(Map<String, ?> props) {
 		// TODO Auto-generated method stub
 		Map<String, Serializable> result = new HashMap<>();
@@ -202,7 +206,7 @@ public class CommonServcie {
 		return result;
 	}
 
-
+	// Method for getting employee
 	public Map<String, Serializable> getEmployeeDetailsService(String employeeID) {
 		logger.info("in getEmployeeDetailsService");
 
@@ -214,6 +218,7 @@ public class CommonServcie {
 		return result;
 	}
 
+	// Method for deleting employee
 	public Map<String, Serializable> deleteEmployeeDetailsService(String employeeID) {
 		logger.info("in deleteEmployeeDetailsService ");
 		Map<String, Serializable> result = commonDAO.deleteEmployeeyDetailsDAO(employeeID);
@@ -230,7 +235,7 @@ public class CommonServcie {
 	}
 
 	//Job
-
+	// Method for adding job
 	public Map<String, Serializable> addJobService(Map<String, ?> props) {
 		// TODO Auto-generated method stub
 		Map<String, Serializable> result = new HashMap<>();
@@ -274,6 +279,7 @@ public class CommonServcie {
 		return result;
 	}
 
+	// Method for getting job
 	public Map<String, Serializable> getJobDetailsService(String jobID) {
 		logger.info("in getJobDetailsService");
 
@@ -285,6 +291,7 @@ public class CommonServcie {
 		return result;
 	}
 
+	// Method for deleting job
 	public Map<String, Serializable> deleteJobDetailsService(String jobID) {
 		logger.info("in deleteJobDetailsService ");
 		Map<String, Serializable> result = commonDAO.deleteJobDetailsDAO(jobID);
@@ -301,7 +308,7 @@ public class CommonServcie {
 	}
 
 	//Cargo
-
+	// Method for adding cargo
 	public Map<String, Serializable> addCargoService(Map<String, ?> props) {
 		Map<String, Serializable> result = new HashMap<>();
 		logger.info("Cargo" + props);
@@ -347,6 +354,7 @@ public class CommonServcie {
 	}
 
 
+	// Method for getting cargo
 	public Map<String, Serializable> getCargoDetailsService(String cargoID) {
 		logger.info("in getCargoDetailsService");
 
@@ -358,6 +366,7 @@ public class CommonServcie {
 		return result;
 	}
 
+	// Method for delete cargo
 	public Map<String, Serializable> deleteCargoDetailsService(String cargoID) {
 		logger.info("in deleteCargoDetailsService ");
 		Map<String, Serializable> result = commonDAO.deleteCargoDetailsDAO(cargoID);

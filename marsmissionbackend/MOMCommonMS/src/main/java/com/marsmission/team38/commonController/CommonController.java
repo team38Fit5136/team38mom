@@ -18,16 +18,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.marsmission.team38.commonService.CommonServcie;
 
+/**
+ * The Rest controller starting from defined port in microservices.properties
+ * Default path for request mapping in commons controller
+ */
 @RestController
 @RequestMapping("/mom/mission")
 @CrossOrigin(origins = "http://localhost:3000")
 public class CommonController {
 
+	//logger variable to print logs
 	private Log logger = LogFactory.getLog(this.getClass());
 
 	@Autowired
 	private CommonServcie commonService;
 
+	//api call for adding country
 	@PostMapping("/country")
 	public Map<String, Serializable> addCountry(@RequestBody Map<String, ?> props){
 		logger.info("in addCountry");
@@ -36,122 +42,139 @@ public class CommonController {
 
 	}
 
+	//api call for getting countries
 	@GetMapping("/country")
 	public Map<String, Serializable> getCountryDetails(
 			@RequestParam(value = "countryID", required = false, defaultValue = "null") String countryID)
 			throws Exception {
-		logger.info("in get getCountryDetails" + countryID);
+		
+		logger.info("in get getCountryDetails" + countryID); //log info for displaying on console as well as in log file, currently in getCountryDetails.
+		
 		return commonService.getCountryDetailsService(countryID);
 	}
 
+	//api call for deleting country
 	@DeleteMapping("/country")
 	public Map<String, Serializable> deleteCountryDetails(
 			@RequestParam(value = "countryID", required = true, defaultValue = "null") String countryID)
 			throws Exception {
 
-		logger.info("in get getCountryDetails" + countryID);
+		logger.info("in get getCountryDetails" + countryID); //log info for displaying on console as well as in log file, currently in deleteCountryDetails
 
 		return commonService.deleteCountryDetailsService(countryID);
 	}
 
+	//api call for getting status
 	@GetMapping("/status")
 	public Map<String, Serializable> getStatusDetails(
 			@RequestParam(value = "statusID", required = false, defaultValue = "null") String statusID)
 			throws Exception {
-		logger.info("in get getCountryDetails" + statusID);
+		logger.info("in get getCountryDetails" + statusID); //log info for displaying on console as well as in log file, currently in getStatusDetails
 		return commonService.getStatusDetailsService(statusID);
 	}
 	
+	//api call for getting shuttle
 	@GetMapping("/shuttle")
 	public Map<String, Serializable> getShuttleDetails(
 			@RequestParam(value = "shuttleID", required = true, defaultValue = "null") String shuttleID)
 			throws Exception {
-		logger.info("in get getShuttleDetails" + shuttleID);
+		logger.info("in get getShuttleDetails" + shuttleID); //log info for displaying on console as well as in log file, currently in getShuttleDetails
 		return commonService.getShuttleDetailsService(shuttleID);
 	}
 	
+	//api call for adding location
 	@PostMapping("/location")
 	public Map<String, Serializable> addLocation(@RequestBody Map<String, ?> props){
-		logger.info("in addLocation");
+		logger.info("in addLocation"); //log info for displaying on console as well as in log file, currently in addLocation
 
 		return commonService.addLocationService(props);
 
 	}
 
+	//api call for getting location 
 	@GetMapping("/location")
 	public Map<String, Serializable> getLocationDetails(
 			@RequestParam(value = "locationID", required = true, defaultValue = "null") String locationID)
 			throws Exception {
-		logger.info("in get getLocationDetails" + locationID);
+		logger.info("in get getLocationDetails" + locationID); //log info for displaying on console as well as in log file, currently in getLocationDetails
 		return commonService.getLocationDetailsService(locationID);
 	}
 
 	//Employee
 
+	//api call for adding employee
 	@PostMapping("/employee")
 	public Map<String, Serializable> addEmployee(@RequestBody Map<String, ?> props) {
-		logger.info("in addEmployee");
+		logger.info("in addEmployee"); //log info for displaying on console as well as in log file, currently in addEmployee
 		return commonService.addEmployeeService(props);
 	}
 
+	//api call for getting employee
 	@GetMapping("/employee")
 	public Map<String, Serializable> getEmployeeDetails(
 			@RequestParam(value = "employeeID", required = true, defaultValue = "null") String employeeID){
-		logger.info("in get getEmployeeDetails" + employeeID);
+		logger.info("in get getEmployeeDetails" + employeeID); //log info for displaying on console as well as in log file, currently in getEmployeeDetails
 		return commonService.getEmployeeDetailsService(employeeID);
 	}
 
+	//api call for deleting employee
 	@DeleteMapping("/employee")
 	public Map<String, Serializable> deleteEmployeeDetails(
 			@RequestParam(value = "employeeID", required = true, defaultValue = "null") String employeeID){
-		logger.info("in get deleteEmployeeDetails" + employeeID);
+		logger.info("in get deleteEmployeeDetails" + employeeID); //log info for displaying on console as well as in log file, currently in deleteEmployeeDetails
 		return commonService.deleteEmployeeDetailsService(employeeID);
 	}
 
 
 	//Job
 
+	//api call for adding Job
 	@PostMapping("/job")
 	public Map<String, Serializable> addJob(@RequestBody Map<String, ?> props){
-		logger.info("in addJob");
+		logger.info("in addJob"); //log info for displaying on console as well as in log file, currently in addJob
 		return commonService.addJobService(props);
 	}
 
+	//api call for getting Job details
 	@GetMapping("/job")
 	public Map<String, Serializable> getJobDetails(
 			@RequestParam(value = "jobID", required = true, defaultValue = "null") String jobID) {
-		logger.info("in get getJobDetails" + jobID);
+		logger.info("in get getJobDetails" + jobID); //log info for displaying on console as well as in log file, currently in getJobDetails
 		return commonService.getJobDetailsService(jobID);
 	}
 
+	//api call for deleting Job 
 	@DeleteMapping("/job")
 	public Map<String, Serializable> deleteJobDetails(
 			@RequestParam(value = "jobID", required = true, defaultValue = "null") String jobID){
-		logger.info("in get deleteJobDetails" + jobID);
+		logger.info("in get deleteJobDetails" + jobID); //log info for displaying on console as well as in log file, currently in deleteJobDetails
 		return commonService.deleteJobDetailsService(jobID);
 	}
 
 
 	//Cargo
 
+	//api call for adding cargo
 	@PostMapping("/cargo")
 	public Map<String, Serializable> addCargo(@RequestBody Map<String, ?> props){
-		logger.info("in addCargo");
+		logger.info("in addCargo"); //log info for displaying on console as well as in log file, currently in addCargo
 		return commonService.addCargoService(props);
 	}
 
-
+	
+	//api call for getting cargo
 	@GetMapping("/cargo")
 	public Map<String, Serializable> getCargoDetails(
 			@RequestParam(value = "cargoID", required = true, defaultValue = "null") String cargoID){
-		logger.info("in get getCargoDetails" + cargoID);
+		logger.info("in get getCargoDetails" + cargoID); //log info for displaying on console as well as in log file, currently in getCargoDetails
 		return commonService.getCargoDetailsService(cargoID);
 	}
 
+	//api call for deleting cargo
 	@DeleteMapping("/cargo")
 	public Map<String, Serializable> deleteCargoDetails(
 			@RequestParam(value = "cargoID", required = true, defaultValue = "null") String cargoID) {
-		logger.info("in deleteCargoDetails" + cargoID);
+		logger.info("in deleteCargoDetails" + cargoID); //log info for displaying on console as well as in log file, currently in deleteCargoDetails
 		return commonService.deleteCargoDetailsService(cargoID);
 	}
 

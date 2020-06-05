@@ -180,6 +180,7 @@ public class UserServcie {
 		return result;
 	}
 
+	//Method for updating user details
 	public Map<String, Serializable> updateUserDetailsService(String userID, Map<String, ?> props) {
 		logger.info("in updateUserDetailsService ");
 		Map<String, Serializable> result = userDAO.updatedetailsDAO(userID, props);

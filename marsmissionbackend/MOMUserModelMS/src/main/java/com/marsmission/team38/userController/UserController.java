@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.marsmission.team38.userService.UserServcie;
 
+/**
+ * The Rest controller starting from defined port in microservices.properties
+ * Default path for request mapping in user controller
+ */
 @RestController
 @RequestMapping("/mom/user")
 @CrossOrigin(origins = "http://localhost:3000")

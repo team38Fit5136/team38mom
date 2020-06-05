@@ -17,13 +17,18 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+/**
+ * The Common DAO class to interact with Database
+ */
 @Repository
 public class CommonDAO {
 
 	@Autowired
 	private JdbcTemplate jdbc;
+	//logger variable to print logs
 	private Log logger = LogFactory.getLog(this.getClass());
 
+	//Method for adding country
 	public long addCountryDAO(Map<String, ?> props) {
 		logger.info("in addCountryDAO");
 		String sql = "insert into country(`country_name`) values(?)";
@@ -41,6 +46,7 @@ public class CommonDAO {
 			final KeyHolder holder = new GeneratedKeyHolder();
 			jdbc.update(psc, holder);
 			final long countryID = holder.getKey().longValue();
+			//returning countryID
 			return countryID;
 		} catch (Exception e) {
 			logger.error(e);
@@ -48,6 +54,7 @@ public class CommonDAO {
 		}
 	}
 
+	//Method for getting country details
 	public Map<String, Serializable> getCountryDetailsDAO(String countryID) {
 		logger.info("in getCountryDetailsDAO");
 
@@ -70,6 +77,7 @@ public class CommonDAO {
 
 	}
 
+	//Method for deleting Country
 	public Map<String, Serializable> deleteCountryDetailsDAO(String countryID) {
 		logger.info("in deleteCountryDetailsDAO");
 
@@ -98,6 +106,7 @@ public class CommonDAO {
 
 	}
 
+	//MEthod for getting shuttle details
 	public Map<String, Serializable> getShuttleDetailsDAO(String shuttleID) {
 		// TODO Auto-generated method stub
 		logger.info("in getShuttleDetailsDAO");
@@ -118,6 +127,7 @@ public class CommonDAO {
 		}
 	}
 
+	//Method for adding location
 	public long addLocationDAO(Map<String, ?> props) {
 		// TODO Auto-generated method stub
 		logger.info("in addLocationDAO");
@@ -149,6 +159,7 @@ public class CommonDAO {
 		}
 	}
 
+	//Method for getting location
 	public Map<String, Serializable> getLocationDetailsDAO(String locationID) {
 		// TODO Auto-generated method stub
 		logger.info("in getLocationDetailsDAO");
@@ -170,6 +181,7 @@ public class CommonDAO {
 
 	// Employee
 
+	//Method for adding employee
 	public long addEmployeeDAO(Map<String, ?> props) {
 		// TODO Auto-generated method stub
 		logger.info("in addEmployeeDAO");
@@ -201,6 +213,7 @@ public class CommonDAO {
 		}
 	}
 
+	//Method for getting employee
 	public Map<String, Serializable> getEmployeeDetailsDAO(String employeeID) {
 		// TODO Auto-generated method stub
 		logger.info("in getEmployeeDetailsDAO");
@@ -220,6 +233,7 @@ public class CommonDAO {
 
 	}
 
+	////Method for deleting employee
 	public Map<String, Serializable> deleteEmployeeyDetailsDAO(String employeeID) {
 		logger.info("in deleteEmployeeyDetailsDAO");
 
@@ -248,7 +262,7 @@ public class CommonDAO {
 	}
 
 	// Job
-
+	//Method for adding job
 	public long addJobDAO(Map<String, ?> props) {
 		logger.info("in addJobDAO");
 
@@ -279,6 +293,7 @@ public class CommonDAO {
 		}
 	}
 
+	//Method for etting job details
 	public Map<String, Serializable> getJobDetailsDAO(String jobID) {
 		logger.info("in getJobDetailsDAO");
 
@@ -297,6 +312,7 @@ public class CommonDAO {
 
 	}
 
+	//Method for deleting job
 	public Map<String, Serializable> deleteJobDetailsDAO(String jobID) {
 		logger.info("in deleteJobDetailsDAO");
 
@@ -325,7 +341,7 @@ public class CommonDAO {
 	}
 
 	// Cargo
-
+	//Method for adding cargo
 	public long addCargoDAO(Map<String, ?> props) {
 		logger.info("in addCargoDAO");
 
@@ -359,6 +375,7 @@ public class CommonDAO {
 		}
 	}
 
+	//Method for getting cargo
 	public Map<String, Serializable> getCargoDetailsDAO(String cargoID) {
 		logger.info("in getCargoDetailsDAO");
 
@@ -377,6 +394,7 @@ public class CommonDAO {
 
 	}
 
+	//Method for deleting cargo
 	public Map<String, Serializable> deleteCargoDetailsDAO(String cargoID) {
 		logger.info("in deleteCargoDetailsDAO");
 
@@ -404,6 +422,7 @@ public class CommonDAO {
 
 	}
 
+	//Method for getting status
 	public Map<String, Serializable> getStatusDetailsDAO(String statusID) {
 		logger.info("in getStatusDetailsDAO");
 
