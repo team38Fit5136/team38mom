@@ -3,7 +3,6 @@ import axios from "axios"
 import { NavLink } from 'react-router-dom'
 import AppContext from '../lib/contextLib'
 import useAppContext from '../lib/contextLib'
-import { Redirect } from 'react-router-dom';
 
 export default class Login extends Component {
   static contextType = useAppContext
@@ -28,7 +27,7 @@ export default class Login extends Component {
     // this._Auth()
     // console.log(this.context)
     const context = this.context
-    console.log(context)
+    console.log(context.isAuthenticated)
   }
 
   // _Auth() {
@@ -59,7 +58,7 @@ export default class Login extends Component {
         this.setState({
           isAuthenticated: true
         })
-        // this.context.hasAuthenicated(this.state.isAuthenticated)
+        this.context.hasAuthenicated(this.state.isAuthenticated)
         // console.log(this.state)
       }
     })
@@ -70,9 +69,7 @@ export default class Login extends Component {
   }
 
   render() {
-    if (this.state.isAuthenticated) {
-      return <Redirect push to="/navigation" />
-    }
+    // console.log(this.context)
     return (
       <div>
         <form className="m-3 d-flex justify-content-center" onSubmit={this.handleSubmit}>

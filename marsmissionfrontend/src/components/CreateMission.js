@@ -44,6 +44,10 @@ export default class CreateMission extends Component {
         this.handleBack = this.handleBack.bind(this)
     }
 
+    async componentDidMount() {
+        const response = await fetch("http://localhost:8083/mom/mission/country")
+        console.log(response)
+    }
 
     handleInputChange = (e) => {
         this.setState({
@@ -142,6 +146,7 @@ export default class CreateMission extends Component {
         })
     }
 
+    /*
     countryOptions = [
         {
             id: 'AU',
@@ -229,6 +234,7 @@ export default class CreateMission extends Component {
             name: 'Painter'
         },
     ]
+    */
 
     render() {
         if (this.state.redirect) {
