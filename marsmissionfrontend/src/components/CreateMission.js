@@ -3,6 +3,7 @@ import { Multiselect } from 'multiselect-react-dropdown'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Redirect } from 'react-router-dom';
+import axios from "axios"
 
 
 export default class CreateMission extends Component {
@@ -12,6 +13,7 @@ export default class CreateMission extends Component {
             missionName: '',
             missionDescription: '',
             countryOrigin: '',
+            countryOriginId: '',
             countryAllowed: [],
             launchDate: '',
             duration: '',
@@ -19,7 +21,7 @@ export default class CreateMission extends Component {
             coordinatorContact: '',
             missionStatus: '',
             location: '',
-            cargoForJourney: '',
+            cargoForJourney: null,
             cargoForMission: '',
             cargoForOtherMission: '',
             employeeTitle: '',
@@ -28,7 +30,10 @@ export default class CreateMission extends Component {
             jobName: '',
             jobDescription: '',
             jobRequirements: [],
-            redirect: false
+            redirect: false,
+            countryList: [],
+            missionStatusList: [],
+            coordinatorNameList: []
         }
         this.handleInputChange = this.handleInputChange.bind(this)
         this.handleCountryOriginSelect = this.handleCountryOriginSelect.bind(this)
@@ -45,8 +50,34 @@ export default class CreateMission extends Component {
     }
 
     async componentDidMount() {
-        const response = await fetch("http://localhost:8083/mom/mission/country")
-        console.log(response)
+        // get list of countries from API call
+        axios.get("http://localhost:8083/mom/mission/country")
+            .then(res => {
+                if (res.data.status === "Success") {
+                    this.setState({
+                        countryList: res.data.responseMsg
+                    })
+                    console.log("countries", res)
+                }
+
+            })
+            .catch(err => {
+                console.log(err)
+            })
+
+        axios.get("http://localhost:8081/mom/user/profile?userRole=coordinator")
+            .then(res => {
+                // console.log("coordinator", res.data.responseMsg)
+                const json = res.data.responseMsg
+                json.forEach(obj => {
+                    // console.log(obj)
+                    const tempList = [{ userID: obj.user_id, userName: obj.user_name }]
+                    // console.log(tempList)
+                    this.setState({
+                        coordinatorNameList: tempList
+                    })
+                });
+            })
     }
 
     handleInputChange = (e) => {
@@ -146,7 +177,6 @@ export default class CreateMission extends Component {
         })
     }
 
-    /*
     countryOptions = [
         {
             id: 'AU',
@@ -234,7 +264,6 @@ export default class CreateMission extends Component {
             name: 'Painter'
         },
     ]
-    */
 
     render() {
         if (this.state.redirect) {
@@ -262,36 +291,40 @@ export default class CreateMission extends Component {
                     <label>Country of Origin: </label>
                     <select value={this.state.countryOrigin} onChange={e => this.handleCountryOriginSelect(e)}>
                         <option disabled={true} value="">Select Country</option>
-                        {this.countryOptions.map(o => <option key={o.id} value={o.name}>{o.name}</option>)}
+                        {this.state.countryList.map(o => <option key={o.country_id} value={o.country_id}>{o.country_name}</option>)}
                     </select>
                     <br />
                     <label>Allowed Countries: </label>
                     <Multiselect
                         placeholder="Select Allowed Countries"
-                        options={this.countryOptions}
+                        options={this.state.countryList}
                         selectedValues={this.state.countryAllowed}
-                        displayValue="name"
+                        displayValue="country_name"
                         onSelect={this.handleMultiSelect}
                     />
                     <br />
                     <label>Coordinator Name: </label>
-                    <input
+                    <select value={this.state.coordinatorName} onChange={e => this.handleCoordinatorNameChange(e)}>
+                        <option disabled={true} value="">Select Coordinator</option>
+                        {this.state.coordinatorNameList.map(o => <option key={o.userID} value={o.userID}>{o.userName}</option>)}
+                    </select>
+                    {/* <input
                         name="coordinatorName"
-                        placeholder="Enter Mission Description"
+                        placeholder="Enter coordinator name"
                         value={this.state.coordinatorName}
-                        onChange={e => this.handleInputChange(e)} />
+                        onChange={e => this.handleInputChange(e)} /> */}
                     <br />
                     <label>Coordinator Contact Info: </label>
                     <input
                         name="coordinatorContact"
-                        placeholder="Enter Mission Description"
+                        placeholder="Enter contact info"
                         value={this.state.coordinatorContact}
                         onChange={e => this.handleInputChange(e)} />
                     <br />
                     <label>Location: </label>
                     <input
                         name="location"
-                        placeholder="Enter Mission Description"
+                        placeholder="Enter Location"
                         value={this.state.location}
                         onChange={e => this.handleInputChange(e)} />
                     <br />
@@ -352,8 +385,8 @@ export default class CreateMission extends Component {
                         onChange={e => this.handleInputChange(e)} />
                     <button onClick={this.handleAddJob}>Add Job</button>
                     <br />
-                    <button onClick={this.handleSubmit} style={{marginRight: "10px"}}>Submit</button>
-                    <button onClick={this.handleBack}>Back</button> 
+                    <button onClick={this.handleSubmit} style={{ marginRight: "10px" }}>Submit</button>
+                    <button onClick={this.handleBack}>Back</button>
                 </form>
             </div>
         )
