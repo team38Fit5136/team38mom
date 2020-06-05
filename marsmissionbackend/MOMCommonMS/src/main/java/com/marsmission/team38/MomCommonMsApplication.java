@@ -17,10 +17,11 @@ public class MomCommonMsApplication {
 	static String logDirectory = ApplicationContext.getGlobalProperty("logging.file");
 
 	public static void main(String[] args) {
+		//SpringApplication object created for common
 		SpringApplication springApplication = new SpringApplication(MomCommonMsApplication.class);
 		Properties properties = new Properties();
-		properties.put("logging.file", logDirectory);
-		springApplication.setDefaultProperties(properties);
+		properties.put("logging.file", logDirectory); //setting logging file and directory
+		springApplication.setDefaultProperties(properties);  //setting properties
 		springApplication.run(args);
 	}
 

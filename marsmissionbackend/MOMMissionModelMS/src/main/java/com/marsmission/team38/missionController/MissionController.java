@@ -18,22 +18,29 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.marsmission.team38.missionService.MissionServcie;
 
+/**
+ * The Rest controller starting from defined port in microservices.properties
+ * Default path for request mapping in mission controller
+ */
 @RestController
 @RequestMapping("/mom/mission")
 @CrossOrigin(origins = "http://localhost:3000")
 public class MissionController {
 
+	//logger variable to print logs
 	private Log logger = LogFactory.getLog(this.getClass());
 
 	@Autowired
 	private MissionServcie missionService;
 
+	//api call for adding mission
 	@PostMapping("")
 	public Map<String, Serializable> addMission(@RequestBody Map<String, ?> props) throws SQLException {
 		logger.info("in addMission");
 		return missionService.addMissionService(props);
 	}
 
+	//api call for getting mission
 	@GetMapping("")
 	public Map<String, Serializable> getMissionDetails(
 			@RequestParam(value = "missionID", required = true, defaultValue = "null") String missionID) throws Exception {
@@ -41,8 +48,9 @@ public class MissionController {
 		return missionService.getMissionDetailsService(missionID);
 	}
 
+	//api call for updating Mission
 	@PutMapping("")
-	public Map<String, Serializable> updateUserDetails(
+	public Map<String, Serializable> updateMissionDetails(
 			@RequestParam(value = "missionID", required = true) String missionID,
 			@RequestBody Map<String, ?> props) {
 		logger.info("missionID" + missionID);

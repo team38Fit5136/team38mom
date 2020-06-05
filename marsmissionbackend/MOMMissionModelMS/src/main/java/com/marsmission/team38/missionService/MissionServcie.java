@@ -17,10 +17,12 @@ import com.marsmission.team38.missionDAO.MissionDAO;
 @Service
 public class MissionServcie {
 
+	//logger variable to print logs
 	private Log logger = LogFactory.getLog(this.getClass());
 	@Autowired
 	private MissionDAO missionDAO;
 
+	//variables whose values will be populated based on json request
 	@Value("${mission.mandatory.cargoID}")
 	boolean cargoIDMandatory;
 
@@ -55,8 +57,8 @@ public class MissionServcie {
 	@Value("${mission.mandatory.statusID}")
 	boolean statusIDMandatory;
 
+	
 	// Method for creating mission
-
 	public Map<String, Serializable> addMissionService(Map<String, ?> props) {
 
 		Map<String, Serializable> result = new HashMap<>();
@@ -168,6 +170,7 @@ public class MissionServcie {
 			}
 		}
 		try {
+			//adding mission and returning mission id
 			missionID = missionDAO.addMissionDAO(props);
 			if (missionID != 0) {
 				logger.info("added successfully");
@@ -203,8 +206,10 @@ public class MissionServcie {
 		return result;
 	}
 
+	//Method for updating mission details using missionID or missionName
 	public Map<String, Serializable> updateMissionDetailsService(String missionID, Map<String, ?> props) {
 		logger.info("in updateMissionDetailsService ");
+		//updating mission details
 		Map<String, Serializable> result = missionDAO.updatedetailsDAO(missionID, props);
 		
 		return result;
