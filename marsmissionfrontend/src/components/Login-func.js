@@ -1,7 +1,8 @@
 import React, { Component } from "react"
 import axios from "axios"
+import { NavLink } from 'react-router-dom'
+import AppContext from '../lib/contextLib'
 import useAppContext from '../lib/contextLib'
-import { Redirect } from 'react-router-dom';
 
 export default class Login extends Component {
   static contextType = useAppContext
@@ -23,11 +24,10 @@ export default class Login extends Component {
   }
 
   componentDidMount() {
-    console.log(this.state)
     // this._Auth()
     // console.log(this.context)
-    // const context = this.context
-    // console.log(context)
+    const context = this.context
+    console.log(context.isAuthenticated)
   }
 
   // _Auth() {
@@ -53,17 +53,13 @@ export default class Login extends Component {
     })
     .then(response => {
       console.log(response)
-      if (response.data.status === "Success" && response.data.responseMsg.length !== 0) {
+      if (response.data.status == "Success") {
         console.log("Authenticated")
         this.setState({
           isAuthenticated: true
         })
-        // this.context.hasAuthenicated(this.state.isAuthenticated)
+        this.context.hasAuthenicated(this.state.isAuthenticated)
         // console.log(this.state)
-      } else if (this.state.userID === "" || this.state.password === "") {
-        alert("Username or password not filled")
-      } else {
-        alert("Incorrect username or password")
       }
     })
     .catch(err => {
@@ -73,9 +69,7 @@ export default class Login extends Component {
   }
 
   render() {
-    if (this.state.isAuthenticated) {
-      return <Redirect push to="/navigation" />
-    }
+    // console.log(this.context)
     return (
       <div>
         <form className="m-3 d-flex justify-content-center" onSubmit={this.handleSubmit}>
