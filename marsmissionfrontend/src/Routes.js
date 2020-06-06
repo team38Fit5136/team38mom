@@ -4,6 +4,7 @@ import Login from './components/Login';
 import Home from './components/Home'
 import Navigation from './components/Navigation'
 import CreateMission from './components/CreateMission'
+import SelectShuttle from './components/SelectShuttle'
 
 export default function Routes() {
     return (
@@ -13,6 +14,7 @@ export default function Routes() {
                 <Route path="/home" component={Home} exact></Route>
                 <Route path="/navigation" component={Navigation} exact></Route>
                 <Route path="/createmission" component={CreateMission} exact></Route>
+                <Route path="/selectshuttle" component={SelectShuttle} exact></Route>
             </Switch>
         </BrowserRouter>
     )

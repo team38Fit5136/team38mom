@@ -14,6 +14,7 @@ export default class Navigation extends Component {
                     <NavLink className="d-inline p-2 bg-dark text-white" to="/createmission">Create Mission</NavLink>
                     <NavLink className="d-inline p-2 bg-dark text-white" to="/">Edit Mission</NavLink>
                     <NavLink className="d-inline p-2 bg-dark text-white" to="/">Create Criteria</NavLink>
+                    <NavLink className="d-inline p-2 bg-dark text-white" to="/selectshuttle">Select Shuttle</NavLink>
                 </Nav>
             </div>
         )
