@@ -1,16 +1,22 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button'
-import Login from './components/Login';
-import Home from './components/Home'
-import Navigation from './components/Navigation'
-import CreateMission from './components/CreateMission'
-
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import Routes from './Routes'
 import { Navbar } from 'react-bootstrap';
+import AppContext from './lib/contextLib'
 
-function App() {
-  return (
-    <BrowserRouter>
+export default class App extends Component {
+  state = {
+    isAuthenicated: false,
+    hasAuthenicated: this.hasAuthenicated
+  }
+
+  hasAuthenicated = (isAuthenicated) => {
+    this.setState({ isAuthenicated })
+  }
+
+  render() {
+    return (
+
       <div className="App">
         <Navbar bg="light">
           <h3 className="d-flex justify-content-center" style={{ marginLeft: "auto" }}>Mission to Mars Portal</h3>
@@ -18,15 +24,10 @@ function App() {
             style={{ marginLeft: "auto" }}
             href="/">Logout</Button>
         </Navbar>
-        <Switch>
-          <Route path="/" component={Login} exact></Route>
-          <Route path="/home" component={Home} exact></Route>
-          <Route path="/navigation" component={Navigation} exact></Route>
-          <Route path="/createmission" component={CreateMission} exact></Route>
-        </Switch>
+        <AppContext.Provider value={this.state}>
+          <Routes />
+        </AppContext.Provider>
       </div>
-    </BrowserRouter>
-  );
+    )
+  }
 }
-
-export default App;
