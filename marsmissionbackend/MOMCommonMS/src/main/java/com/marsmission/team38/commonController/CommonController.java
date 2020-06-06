@@ -1,7 +1,6 @@
 package com.marsmission.team38.commonController;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.marsmission.team38.commonService.CommonServcie;
 
@@ -94,7 +94,7 @@ public class CommonController {
 	//api call for getting location 
 	@GetMapping("/location")
 	public Map<String, Serializable> getLocationDetails(
-			@RequestParam(value = "locationID", required = true, defaultValue = "null") String locationID)
+			@RequestParam(value = "locationID", required = false, defaultValue = "null") String locationID)
 			throws Exception {
 		logger.info("in get getLocationDetails" + locationID); //log info for displaying on console as well as in log file, currently in getLocationDetails
 		return commonService.getLocationDetailsService(locationID);
@@ -155,10 +155,13 @@ public class CommonController {
 	//Cargo
 
 	//api call for adding cargo
-	@PostMapping("/cargo")
-	public Map<String, Serializable> addCargo(@RequestBody Map<String, ?> props){
+	
+
+    @PostMapping("/upload")
+    public String addCargo(@RequestParam("file") MultipartFile file, 
+                         @RequestParam(value = "fileType", required = true, defaultValue = "null") String fileType){
 		logger.info("in addCargo"); //log info for displaying on console as well as in log file, currently in addCargo
-		return commonService.addCargoService(props);
+		return commonService.addCargoService(file,fileType);
 	}
 
 	
