@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.marsmission.team38.missionService.MissionServcie;
 
@@ -35,9 +36,11 @@ public class MissionController {
 
 	//api call for adding mission
 	@PostMapping("")
-	public Map<String, Serializable> addMission(@RequestBody Map<String, ?> props) throws SQLException {
-		logger.info("in addMission");
-		return missionService.addMissionService(props);
+	public Map<String, Serializable> addMission(@RequestParam("file") MultipartFile[] files,
+			@RequestBody Map<String, ?> props) throws SQLException {
+		logger.info("in addMission"+files+"            "+props);
+		return null;
+//		return missionService.addMissionService(props);
 	}
 
 	//api call for getting mission
