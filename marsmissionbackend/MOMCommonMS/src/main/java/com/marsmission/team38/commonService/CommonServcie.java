@@ -214,7 +214,7 @@ public class CommonServcie {
 				if (employment != null && !(employment.isEmpty())) {
 					Long resp = commonDAO.addEmployeeDAO(employment, jobID);
 					if (resp != 0) {
-						result.put("jobID ", jobID);
+						result.put("jobID", jobID);
 						result.put("status", "success");
 						result.put("responseMsg", "successfully inserted");
 					} else {
@@ -223,7 +223,7 @@ public class CommonServcie {
 					}
 				} else {
 					if (jobID != 0) {
-						result.put("jobID ", jobID);
+						result.put("jobID", jobID);
 						result.put("status", "success");
 						result.put("responseMsg", "successfully inserted");
 					}

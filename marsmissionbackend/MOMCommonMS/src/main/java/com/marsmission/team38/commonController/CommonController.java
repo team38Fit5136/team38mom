@@ -24,7 +24,7 @@ import com.marsmission.team38.commonService.CommonServcie;
  */
 @RestController
 @RequestMapping("/mom/mission")
-//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000")
 public class CommonController {
 
 	//logger variable to print logs
