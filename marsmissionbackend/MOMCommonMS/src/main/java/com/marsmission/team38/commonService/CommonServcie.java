@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.marsmission.team38.commonDAO.CommonDAO;
 
@@ -309,10 +310,16 @@ public class CommonServcie {
 
 	//Cargo
 	// Method for adding cargo
+	public String addCargoService(MultipartFile file, String fileType) {
+		logger.info("addCargoService " + fileType);
+
+		return null;
+	}
+	
+	
 	public Map<String, Serializable> addCargoService(Map<String, ?> props) {
 		Map<String, Serializable> result = new HashMap<>();
-		logger.info("Cargo" + props);
-
+	
 		long cargoId = 0;
 
 		String cargoJourney = (String) (props.containsKey("cargoJourney") ? props.get("cargoJourney") : null);
@@ -395,6 +402,8 @@ public class CommonServcie {
 			return result;
 
 		}
+
+		
 
 	
 }

@@ -161,16 +161,17 @@ public class CommonDAO {
 
 	//Method for getting location
 	public Map<String, Serializable> getLocationDetailsDAO(String locationID) {
-		// TODO Auto-generated method stub
-		logger.info("in getLocationDetailsDAO");
+		logger.info("in getCountryDetailsDAO");
 
 		Map<String, Serializable> result = new HashMap<>();
-
+		String sql = "SELECT * FROM location ";
+		logger.info("locationID" + locationID);
 		try {
-			String sql = "SELECT * FROM location where (location_id = '" + locationID + "')";
-
+			if (!locationID.equalsIgnoreCase("null")) {
+				sql += " where (location_id = '" + locationID + "'";
+			}
 			result.put("status", "Success");
-			result.put("responseMsg", (Serializable) jdbc.queryForMap(sql));
+			result.put("responseMsg", (Serializable) jdbc.queryForList(sql));
 			return result;
 		} catch (Exception e) {
 			logger.error("in getLocationDetailsDAO error " + e);
