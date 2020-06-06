@@ -24,7 +24,7 @@ import com.marsmission.team38.commonService.CommonServcie;
  */
 @RestController
 @RequestMapping("/mom/mission")
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 public class CommonController {
 
 	//logger variable to print logs
@@ -100,14 +100,6 @@ public class CommonController {
 		return commonService.getLocationDetailsService(locationID);
 	}
 
-	//Employee
-
-	//api call for adding employee
-	@PostMapping("/employee")
-	public Map<String, Serializable> addEmployee(@RequestBody Map<String, ?> props) {
-		logger.info("in addEmployee"); //log info for displaying on console as well as in log file, currently in addEmployee
-		return commonService.addEmployeeService(props);
-	}
 
 	//api call for getting employee
 	@GetMapping("/employee")
@@ -146,7 +138,7 @@ public class CommonController {
 	//api call for deleting Job 
 	@DeleteMapping("/job")
 	public Map<String, Serializable> deleteJobDetails(
-			@RequestParam(value = "jobID", required = true, defaultValue = "null") String jobID){
+			@RequestParam(value = "jobID", required = true, defaultValue = "null") Integer jobID){
 		logger.info("in get deleteJobDetails" + jobID); //log info for displaying on console as well as in log file, currently in deleteJobDetails
 		return commonService.deleteJobDetailsService(jobID);
 	}
