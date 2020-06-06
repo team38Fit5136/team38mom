@@ -4,6 +4,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Redirect } from 'react-router-dom';
 import axios from "axios"
+import fileTemplate from '../fileTemplates/cargoForJourney.csv'
 
 
 export default class CreateMission extends Component {
@@ -12,15 +13,14 @@ export default class CreateMission extends Component {
         this.state = {
             missionName: '',
             missionDescription: '',
-            countryOrigin: '',
-            countryOriginId: '',
+            countryOriginID: '',
             countryAllowed: [],
             launchDate: '',
             duration: '',
-            coordinatorName: '',
+            coordinator: { id: '', name: '', email: '' },
             coordinatorContact: '',
             missionStatus: '',
-            location: '',
+            locationID: '',
             cargoForJourney: null,
             cargoForMission: '',
             cargoForOtherMission: '',
@@ -33,7 +33,9 @@ export default class CreateMission extends Component {
             redirect: false,
             countryList: [],
             missionStatusList: [],
-            coordinatorNameList: []
+            coordinatorNameList: [],
+            locationList: [],
+            jobID: null
         }
         this.handleInputChange = this.handleInputChange.bind(this)
         this.handleCountryOriginSelect = this.handleCountryOriginSelect.bind(this)
@@ -47,6 +49,10 @@ export default class CreateMission extends Component {
         this.handleAddJob = this.handleAddJob.bind(this)
         this.handleDateChange = this.handleDateChange.bind(this)
         this.handleBack = this.handleBack.bind(this)
+        this.handleCoordinatorNameChange = this.handleCoordinatorNameChange.bind(this)
+        this.handleFileUpload = this.handleFileUpload.bind(this)
+        this.handleLocationChange = this.handleLocationChange.bind(this)
+        this.removeEmployment = this.removeEmployment.bind(this)
     }
 
     async componentDidMount() {
@@ -57,7 +63,7 @@ export default class CreateMission extends Component {
                     this.setState({
                         countryList: res.data.responseMsg
                     })
-                    console.log("countries", res)
+                    // console.log("countries", res)
                 }
 
             })
@@ -65,18 +71,52 @@ export default class CreateMission extends Component {
                 console.log(err)
             })
 
+        // get list of coordinatoes from API call
         axios.get("http://localhost:8081/mom/user/profile?userRole=coordinator")
             .then(res => {
-                // console.log("coordinator", res.data.responseMsg)
-                const json = res.data.responseMsg
-                json.forEach(obj => {
-                    // console.log(obj)
-                    const tempList = [{ userID: obj.user_id, userName: obj.user_name }]
-                    // console.log(tempList)
+                if (res.data.status === "Success") {
+                    // console.log("coordinator", res.data.responseMsg)
+                    const json = res.data.responseMsg
+                    json.forEach(obj => {
+                        // console.log(obj)
+                        const tempList = [{ id: obj.user_id, name: obj.full_name, email: obj.user_email }]
+                        // console.log("coordinator", tempList)
+                        this.setState({
+                            coordinatorNameList: tempList
+                        })
+                    });
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            })
+
+        // get list of mission status from API call
+        axios.get("http://localhost:8083/mom/mission/status")
+            .then(res => {
+                if (res.data.status === "Success") {
+                    // console.log("mission status", res)
                     this.setState({
-                        coordinatorNameList: tempList
+                        missionStatusList: res.data.responseMsg
                     })
-                });
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            })
+
+        // get list of locations from API call
+        axios.get("http://localhost:8083/mom/mission/location")
+            .then(res => {
+                if (res.data.status === "Success") {
+                    console.log("location", res)
+                    this.setState({
+                        locationList: res.data.responseMsg
+                    })
+                }
+            })
+            .catch(err => {
+                console.log(err)
             })
     }
 
@@ -93,7 +133,7 @@ export default class CreateMission extends Component {
 
     handleCountryOriginSelect = (e) => {
         this.setState({
-            countryOrigin: e.target.value
+            countryOriginID: e.target.value
 
         })
     }
@@ -131,17 +171,36 @@ export default class CreateMission extends Component {
 
     handleAddEmployment = (e) => {
         e.preventDefault()
-        let object = {
-            'title': this.state.employeeTitle,
-            'count': this.state.noOfEmployee
-        }
-        this.setState(prevState => {
-            let employmentRequirements = prevState.employmentRequirements.concat(object)
-            return {
-                employmentRequirements
+        if (this.state.employeeTitle === '' || this.state.noOfEmployee === '') {
+            alert("No employees entered, nothing added")
+        } else {
+            let object = {
+                'empTitle': this.state.employeeTitle,
+                'numberOfEmp': this.state.noOfEmployee
             }
+            this.setState(prevState => {
+                let employmentRequirements = prevState.employmentRequirements.concat(object)
+                return {
+                    employmentRequirements
+                }
+            })
+            alert(this.state.noOfEmployee + " " + this.state.employeeTitle + " added")
+            this.state.employmentRequirements.map(function (obj, index) {
+                // console.log(obj)
+                // console.log(index)
+            })
+        }
+    }
+
+    removeEmployment = (index, e) => {
+        e.preventDefault()
+        // console.log(index)
+        const empReq = [...this.state.employmentRequirements]
+        empReq.splice(index, 1)
+        this.setState({
+            employmentRequirements: empReq
         })
-        alert(this.state.noOfEmployee + " " + this.state.employeeTitle + " added")
+        // console.log(this.state.employmentRequirements)
     }
 
     handleJobNameSelect = (e) => {
@@ -152,17 +211,47 @@ export default class CreateMission extends Component {
 
     handleAddJob = (e) => {
         e.preventDefault()
-        let object = {
-            'jobName': this.state.jobName,
-            'jobDescription': this.state.jobDescription
-        }
-        this.setState(prevState => {
-            let jobRequirements = prevState.jobRequirements.concat(object)
-            return {
-                jobRequirements
+        if (this.state.jobName === '' || this.state.jobDescription === '') {
+            alert("Job title or job description cannot be empty")
+        } else {
+            e.preventDefault()
+            let object = {
+                'jobName': this.state.jobName,
+                'jobDesc': this.state.jobDescription
             }
-        })
-        alert(this.state.jobName + " added")
+            this.setState(prevState => {
+                let jobRequirements = prevState.jobRequirements.concat(object)
+                return {
+                    jobRequirements
+                }
+            })
+
+            // send POST request
+            axios({
+                method: "POST",
+                url: "http://localhost:8083/mom/mission/job",
+                data: {
+                    "jobName": this.state.jobName,
+                    "jobDesc": this.state.jobDescription,
+                    "employment": this.state.employmentRequirements
+                }
+            })
+                .then(res => {
+                    if (res.data.status === 'success') {
+                        const json = res.data
+                        console.log("Job POST response: ", json)
+                        this.setState({
+                            jobID: res.data.jobID
+                        })
+                    }
+
+
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            alert(this.state.jobName + " added")
+        }
     }
 
     handleDateChange = date => {
@@ -177,93 +266,42 @@ export default class CreateMission extends Component {
         })
     }
 
-    countryOptions = [
-        {
-            id: 'AU',
-            name: 'Australia'
-        },
-        {
-            id: 'IN',
-            name: 'India'
-        },
-        {
-            id: 'UK',
-            name: 'United Kingdom'
-        },
-        {
-            id: 'US',
-            name: 'United States'
-        },
-    ]
+    handleCoordinatorNameChange = (e) => {
+        const selectedIndex = e.target.selectedIndex
+        this.setState({
+            coordinator: {
+                id: e.target.options[selectedIndex].value,
+                name: e.target.options[selectedIndex].getAttribute("name"),
+                email: e.target.options[selectedIndex].getAttribute("email")
+            }
+        })
+    }
 
-    missionStatusFields = [
-        {
-            id: 'DEPRT',
-            name: 'Departed Earth'
-        },
-        {
-            id: 'LNDM',
-            name: 'Landed on Mars'
-        },
-        {
-            id: 'INPROG',
-            name: 'Mission in Progess'
-        },
-        {
-            id: 'RTRNE',
-            name: 'Returned to Earth'
-        },
-        {
-            id: 'CMPLT',
-            name: 'Mission Completed'
-        },
-    ]
-
-    employeeTitleFields = [
-        {
-            id: 'BLDR',
-            name: 'Builder'
-        },
-        {
-            id: 'DSIGNR',
-            name: 'Designer'
-        },
-        {
-            id: 'NRSE',
-            name: 'Nurse'
-        },
-        {
-            id: 'ELCTRN',
-            name: 'Electrician'
-        },
-        {
-            id: 'MNUFCTR',
-            name: 'Manufacturer'
+    handleFileUpload = (e) => {
+        e.preventDefault()
+        if (this.state.cargoForJourney !== null) {
+            const formData = new FormData()
+            formData.append(
+                "cargoForJourney",
+                this.state.cargoForJourney,
+                this.state.cargoForJourney.name
+            )
+            console.log(this.state.cargoForJourney)
+            console.log(formData.get("cargoForJourney"))
+            axios.post("http://localhost:8000/upload",
+                formData
+            )
+        } else {
+            alert("No file selected, please select a file")
         }
-    ]
 
-    jobNameFields = [
-        {
-            id: 'ELECENGG',
-            name: 'Electrical Engineer'
-        },
-        {
-            id: 'CIVLENGG',
-            name: 'CiviL Engineer'
-        },
-        {
-            id: 'PLMBR',
-            name: 'Plumber'
-        },
-        {
-            id: 'SURGN',
-            name: 'Surgeon'
-        },
-        {
-            id: 'PNTR',
-            name: 'Painter'
-        },
-    ]
+    }
+
+    handleLocationChange = (e) => {
+        this.setState({
+            locationID: e.target.value
+        })
+    }
 
     render() {
         if (this.state.redirect) {
@@ -289,7 +327,7 @@ export default class CreateMission extends Component {
                         onChange={e => this.handleInputChange(e)} />
                     <br />
                     <label>Country of Origin: </label>
-                    <select value={this.state.countryOrigin} onChange={e => this.handleCountryOriginSelect(e)}>
+                    <select value={this.state.countryOriginID} onChange={e => this.handleCountryOriginSelect(e)}>
                         <option disabled={true} value="">Select Country</option>
                         {this.state.countryList.map(o => <option key={o.country_id} value={o.country_id}>{o.country_name}</option>)}
                     </select>
@@ -304,34 +342,28 @@ export default class CreateMission extends Component {
                     />
                     <br />
                     <label>Coordinator Name: </label>
-                    <select value={this.state.coordinatorName} onChange={e => this.handleCoordinatorNameChange(e)}>
+                    <select value={this.state.coordinator.name} onChange={e => this.handleCoordinatorNameChange(e)}>
                         <option disabled={true} value="">Select Coordinator</option>
-                        {this.state.coordinatorNameList.map(o => <option key={o.userID} value={o.userID}>{o.userName}</option>)}
+                        {this.state.coordinatorNameList.map(o => <option key={o.id} value={o.id} email={o.email} name={o.name}>{o.name}</option>)}
                     </select>
-                    {/* <input
-                        name="coordinatorName"
-                        placeholder="Enter coordinator name"
-                        value={this.state.coordinatorName}
-                        onChange={e => this.handleInputChange(e)} /> */}
                     <br />
                     <label>Coordinator Contact Info: </label>
                     <input
                         name="coordinatorContact"
                         placeholder="Enter contact info"
-                        value={this.state.coordinatorContact}
+                        value={this.state.coordinator.email}
                         onChange={e => this.handleInputChange(e)} />
                     <br />
                     <label>Location: </label>
-                    <input
-                        name="location"
-                        placeholder="Enter Location"
-                        value={this.state.location}
-                        onChange={e => this.handleInputChange(e)} />
+                    <select value={this.state.locationID} onChange={this.handleLocationChange}>
+                        <option disabled={true} value="">Select Location</option>
+                        {this.state.locationList.map(o => <option key={o.location_id} value={o.location_id}>{o.location_north + " N" + ", " + o.location_east + " E"}</option>)}
+                    </select>
                     <br />
                     <label>Mission Status: </label>
                     <select value={this.state.missionStatus} onChange={e => this.handleMissionStatusSelect(e)}>
                         <option disabled={true} value="">Select Mission</option>
-                        {this.missionStatusFields.map(o => <option key={o.id} value={o.name}>{o.name}</option>)}
+                        {this.state.missionStatusList.map(o => <option key={o.status_id} value={o.status_id}>{o.status_name}</option>)}
                     </select>
                     <br />
                     <label>Mission Duration (in months): </label>
@@ -339,6 +371,7 @@ export default class CreateMission extends Component {
                         name="duration"
                         type="number"
                         defaultValue='0'
+                        min={0}
                         onChange={this.onNumberInput} />
                     <br />
                     <label>Launch Date</label>
@@ -349,7 +382,8 @@ export default class CreateMission extends Component {
                     <br />
                     <label>Cargo For Journey: </label>
                     <input type="file" name="cargoForJourney" onChange={this.handleOnFileChange} />
-                    <a href="#" download="file.txt">Download Template</a>
+                    <a href={fileTemplate} download="cargoForJourney.csv">Download Template</a>
+                    <button onClick={this.handleFileUpload}>Upload</button>
                     <br />
                     <label>Cargo For Mission: </label>
                     <input type="file" name="cargoForMission" onChange={this.handleOnFileChange} />
@@ -359,24 +393,12 @@ export default class CreateMission extends Component {
                     <input type="file" name="cargoForOtherMission" onChange={this.handleOnFileChange} />
                     <a href="#" download="file.txt">Download Template</a>
                     <br />
-                    <label>Employee Title: </label>
-                    <select value={this.state.employeeTitle} onChange={e => this.handleEmployeeTitleSelect(e)}>
-                        <option disabled={true} value="">Select Employee Title</option>
-                        {this.employeeTitleFields.map(o => <option key={o.id} value={o.name}>{o.name}</option>)}
-                    </select>
-                    <label>Number of Employee: </label>
-                    <input
-                        name="noOfEmployee"
-                        type="number"
-                        defaultValue='0'
-                        onChange={this.onNumberInput} />
-                    <button onClick={this.handleAddEmployment}>Add Employment</button>
-                    <br />
                     <label>Job Name: </label>
-                    <select value={this.state.jobName} onChange={e => this.handleJobNameSelect(e)}>
-                        <option disabled={true} value="">Select Job Name</option>
-                        {this.jobNameFields.map(o => <option key={o.id} value={o.name}>{o.name}</option>)}
-                    </select>
+                    <input
+                        name="jobName"
+                        placeholder="Enter job name"
+                        value={this.state.jobName}
+                        onChange={e => this.handleInputChange(e)} />
                     <label>Job Description: </label>
                     <input
                         name="jobDescription"
@@ -384,6 +406,29 @@ export default class CreateMission extends Component {
                         value={this.state.jobDescription}
                         onChange={e => this.handleInputChange(e)} />
                     <button onClick={this.handleAddJob}>Add Job</button>
+                    <br />
+                    <label>Employee Title: </label>
+                    <input
+                        name="employeeTitle"
+                        placeholder="Enter job title"
+                        value={this.state.employeeTitle}
+                        onChange={e => this.handleInputChange(e)} />
+                    <label>Number of Employee: </label>
+                    <input
+                        name="noOfEmployee"
+                        type="number"
+                        defaultValue='0'
+                        min={0}
+                        onChange={this.onNumberInput} />
+                    <button onClick={this.handleAddEmployment}>Add Employment to Job</button>
+                    {this.state.employmentRequirements.map((obj, index) => {
+                        return (
+                            <div key={index}>
+                                <input value={obj.numberOfEmp + " " + obj.empTitle} />
+                                <button onClick={(e) => this.removeEmployment(index, e)}>Remove Employment</button>
+                            </div>
+                        )
+                    })}
                     <br />
                     <button onClick={this.handleSubmit} style={{ marginRight: "10px" }}>Submit</button>
                     <button onClick={this.handleBack}>Back</button>
