@@ -8,8 +8,6 @@ import cargoForJourneyTemplate from '../fileTemplates/cargoForJourney.csv'
 import cargoForMissionTemplate from '../fileTemplates/cargoForMission.csv'
 import cargoForOtherMissionTemplate from '../fileTemplates/cargoForOtherMission.csv'
 import moment from 'moment';
-import fs from 'fs'
-import { isNull } from 'util';
 
 
 export default class CreateMission extends Component {
@@ -208,7 +206,7 @@ export default class CreateMission extends Component {
                 "countryOrigin": this.state.countryOriginID,
                 "launchDate": moment(this.state.launchDate).format("YYYY-MM-DD"),
                 "duration": this.state.duration,
-                "coordinatorID": this.state.coordinatorID,
+                "coordinatorID": this.state.coordinator.id,
             }
             // POST request for Mission microservice
             const formData = new FormData()

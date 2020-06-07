@@ -1,57 +1,14 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
+import axios from "axios"
 
 export default class SelectShuttle extends Component {
     constructor(props) {
         super(props)
         this.state = {
             missionID: '',
-            missionList: [
-                {
-                    name: "Elysium Mons Infra Project",
-                    id: 7003,
-                    missionDesc: "To build basic infrastructure",
-                    location: "120N, 55E",
-                    duration: "32",
-                    status: "Departed Earth",
-                    cargoForJourney: "100",
-                    cargoForMision: "250",
-                    cargoForOtherMission: "300"
-                },
-                {
-                    name: "Olympus Mons Climbing Expedition",
-                    id: 7004,
-                    missionDesc: "To climb and discover the summit",
-                    location: "133.1N, 140E",
-                    duration: "33",
-                    status: "Landed On Mars",
-                    cargoForJourney: "121",
-                    cargoForMision: "600",
-                    cargoForOtherMission: "100"
-                },
-                {
-                    name: "Valles Marineris Railway Project",
-                    id: 7005,
-                    missionDesc: "To build railway infrastructure",
-                    location: "124N, 55E",
-                    duration: "32",
-                    status: "Departed Earth",
-                    cargoForJourney: "111",
-                    cargoForMision: "256",
-                    cargoForOtherMission: "370"
-                },
-                {
-                    name: "Medusae Fossae City Building Prohect",
-                    id: 7006,
-                    missionDesc: "To build basic infrastructure",
-                    location: "120N, 55E",
-                    duration: "32",
-                    status: "Departed Earth",
-                    cargoForJourney: "1045",
-                    cargoForMision: "254",
-                    cargoForOtherMission: "376"
-                }
-            ],
+            missionList: [],
+            missionSelected: {},
             shuttleList: [
                 {
                     id: 765,
@@ -84,8 +41,15 @@ export default class SelectShuttle extends Component {
         this.handleBack = this.handleBack.bind(this)
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         // get API for mission
+        axios.get("http://localhost:8082/mom/mission/")
+            .then(res => {
+                console.log(res)
+                if (res.data.status === "Success") {
+                    this.setState({ missionList: res.data.responseMsg })
+                }
+            })
     }
 
     handleMissionChange = (e) => {
@@ -102,6 +66,23 @@ export default class SelectShuttle extends Component {
 
     handleMissionSelect = (e) => {
         e.preventDefault()
+        if (this.state.missionID === '') {
+            alert("No mission selected")
+        } else {
+            axios({
+                method: "GET",
+                url: "http://localhost:8082/mom/mission/shuttle?",
+                params: {
+                    missionID: this.state.missionID
+                }
+            })
+            .then(res => {
+                console.log(res)
+                if (res.data.status === "success") {
+    
+                }
+            })
+        }
     }
 
     handleShuttleChange = (e) => {
@@ -120,7 +101,7 @@ export default class SelectShuttle extends Component {
 
         // selected mission
         const missionList = this.state.missionList
-        const selectedMission = missionList.filter(o => { return o.id == this.state.missionID })
+        const selectedMission = missionList.filter(o => { return o.mission_id == this.state.missionID })
 
         // selected shuttle
         const shuttleList = this.state.shuttleList
@@ -132,12 +113,13 @@ export default class SelectShuttle extends Component {
                 <label>Select Mission to assign shuttle:</label>
                 <select value={this.state.missionID} onChange={this.handleMissionChange} style={{ marginLeft: "10px" }}>
                     <option disabled={true} value="">Select Mission</option>
-                    {this.state.missionList.map(o => <option key={o.id} value={o.id}>{o.name}</option>)}
+                    {this.state.missionList.map(o => <option key={o.mission_id} value={o.mission_id}>{o.mission_name}</option>)}
                 </select>
+                <input type="button" value="Select Mission" onClick={this.handleMissionSelect} style={{marginLeft: "10px"}} />
                 <Line color="black" />
                 <h5 className="m-3 d-flex justify-content-center">Mission Details</h5>
                 <br />
-                {selectedMission.map(mission => <SelectedMission key={mission.id} mission={mission} />)}
+                {selectedMission.map(mission => <SelectedMission key={mission.mission_id} mission={mission} />)}
                 <Line color="black" />
                 <h5 className="m-3 d-flex justify-content-center">Shuttle Details</h5>
                 <label>Select Shuttle:</label>
@@ -172,14 +154,14 @@ const SelectedMission = (props) => {
             <label>Mission Name:</label>
             <input
                 type="text"
-                value={props.mission.name}
+                value={props.mission.mission_name}
                 readOnly={true}
                 style={{ marginLeft: "10px" }} />
             <br />
             <label>Mission Description:</label>
             <input
                 type="text"
-                value={props.mission.missionDesc}
+                value={props.mission.mission_details}
                 readOnly={true}
                 style={{ marginLeft: "10px" }} />
             <br />
@@ -200,7 +182,7 @@ const SelectedMission = (props) => {
             <label>Mission Status:</label>
             <input
                 type="text"
-                value={props.mission.status}
+                value={props.mission.status_id}
                 readOnly={true}
                 style={{ marginLeft: "10px" }} />
             <br />
