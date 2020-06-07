@@ -79,24 +79,25 @@ public class MissionServcie {
 
 		//
 		int missionID = 0;
-		Integer coordinatorID = (int) (body.containsKey("coordinatorID")
-				? body.get("coordinatorID").toString().equalsIgnoreCase("") ? 1 : body.get("coordinatorID")
+		Integer coordinatorID = (body.containsKey("coordinatorID")
+				? body.get("coordinatorID").toString().equalsIgnoreCase("") ? 1
+						: Integer.parseInt((String) body.get("coordinatorID"))
 				: 1);
 
-		Integer locationID = (int) (body.containsKey("locationID")
-				? body.get("locationID").toString().equalsIgnoreCase("") ? 1 : body.get("locationID")
+		Integer locationID = (body.containsKey("locationID")
+				? body.get("locationID").toString().equalsIgnoreCase("") ? 1
+						: Integer.parseInt((String) body.get("locationID"))
 				: 1);
-		Integer statusID = (int) (body.containsKey("statusID")
-				? body.get("statusID").toString().equalsIgnoreCase("") ? 1 : body.get("statusID")
+		Integer statusID = (body.containsKey("statusID") ? body.get("statusID").toString().equalsIgnoreCase("") ? 1
+				: Integer.parseInt((String) body.get("statusID")) : 1);
+
+		Integer countryOrigin = (body.containsKey("countryOrigin")
+				? body.get("countryOrigin").toString().equalsIgnoreCase("") ? 1
+						: Integer.parseInt((String) body.get("countryOrigin"))
 				: 1);
 
-		Integer countryOrigin = (int) (body.containsKey("countryOrigin")
-				? body.get("countryOrigin").toString().equalsIgnoreCase("") ? 1 : body.get("countryOrigin")
-				: 1);
-
-		Integer duration = (int) (body.containsKey("duration")
-				? body.get("duration").toString().equalsIgnoreCase("") ? 0 : body.get("duration")
-				: 0);
+		Integer duration = (body.containsKey("duration") ? body.get("duration").toString().equalsIgnoreCase("") ? 0
+				: Integer.parseInt((String) body.get("duration")) : 0);
 
 		List<?> countryAllowed = (List<?>) (body.containsKey("countryAllowed") ? body.get("countryAllowed") : null);// array
 		List<?> jobID = (List<?>) (body.containsKey("jobID") ? body.get("jobID") : null);// array
@@ -106,7 +107,7 @@ public class MissionServcie {
 		String missionName = (String) (body.containsKey("missionName") ? body.get("missionName") : null);
 
 		if (coordinatorIDMandatory) {
-			if (coordinatorID == 0) {
+			if (coordinatorID == 1) {
 				logger.warn("coordinatorID is mandatory for the mission");
 				result.put("responseMsg", "coordinatorID is mandatory for the mission");
 				result.put("status", "failed");
@@ -114,7 +115,7 @@ public class MissionServcie {
 			}
 		}
 		if (statusIDMandatory) {
-			if (statusID == 0) {
+			if (statusID == 1) {
 				logger.warn("Status ID is mandatory for the mission");
 				result.put("responseMsg", "Status ID is mandatory for the mission");
 				result.put("status", "failed");
@@ -122,7 +123,7 @@ public class MissionServcie {
 			}
 		}
 		if (countryOriginMandatory) {
-			if (countryOrigin == 0) {
+			if (countryOrigin == 1) {
 				logger.warn("Country of Origin is mandatory for the mission");
 				result.put("responseMsg", "Country of Origin is mandatory for the mission");
 				result.put("status", "failed");
@@ -131,7 +132,7 @@ public class MissionServcie {
 		}
 
 		if (durationMandatory) {
-			if (duration == null || (duration.toString().equalsIgnoreCase(""))) {
+			if (duration == 0) {
 				logger.warn("Duration is mandatory for the mission");
 				result.put("responseMsg", "Duration is mandatory for the mission");
 				result.put("status", "failed");
@@ -366,7 +367,7 @@ public class MissionServcie {
 
 			JSONArray cargoForJourneyQuant = obj1.getJSONArray("cargoForJourney");
 			int cargoForJourneyQuantity = cargoQuantiy(cargoForJourneyQuant);
-			obj.put("cargoForJourneyQuantityt", cargoForJourneyQuantity);
+			obj.put("cargoForJourneyQuantity", cargoForJourneyQuantity);
 
 			JSONArray cargoForMissionQuant = obj1.getJSONArray("cargoForMission");
 			int cargoForMissionQuantity = cargoQuantiy(cargoForMissionQuant);

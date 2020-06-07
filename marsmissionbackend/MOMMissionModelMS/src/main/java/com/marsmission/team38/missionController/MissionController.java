@@ -1,13 +1,21 @@
 package com.marsmission.team38.missionController;
 
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
 import java.util.Map;
+
+import javax.annotation.Resource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.UrlResource;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,7 +33,7 @@ import com.marsmission.team38.missionService.MissionServcie;
  */
 @RestController
 @RequestMapping("/mom/mission")
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 public class MissionController {
 
 	// logger variable to print logs
@@ -70,38 +78,24 @@ public class MissionController {
 
 		return missionService.getMissionDetailsshuttle(missionID);
 	}
-
+//	 @GetMapping("/download/")
+//	    public Resource download(@PathVariable String filename){
+//	        Path pathToFile = Path.of("./uploads/" + filename);
+//	        UrlResource resource = null;
+//	        try {
+//	            resource = new UrlResource(pathToFile.toUri());
+//	        } catch (MalformedURLException e) {
+//	            throw new RuntimeException(e);
+//	        }
+//	        return (Resource) resource;
+//	    }
 
 	// api call for updating Mission
-
-	// api call for adding mission
-	/*
-	 * @RequestMapping(value = "", method = RequestMethod.PUT)
-	 * 
-	 * @RequestParam(value = "cargoForJourney", required = false, defaultValue =
-	 * "null") MultipartFile cargoForJourney, public Map<String, Serializable>
-	 * updateMission(
-	 * 
-	 * @RequestParam(value = "cargoForMission", required = false, defaultValue =
-	 * "null") MultipartFile cargoForMission,
-	 * 
-	 * @RequestParam(value = "cargoForOtherMission", required = false, defaultValue
-	 * = "null") MultipartFile cargoForOtherMission,
-	 * 
-	 * @RequestParam("props") String props) throws Exception {
-	 * logger.info("in addMission" + cargoForJourney + "            " + props);
-	 * JsonNode actualObj = mapper.readTree(props); // Map<String, Object> body =
-	 * mapper.convertValue(actualObj, new TypeReference<Map<String, Object>>() { });
-	 * 
-	 * logger.info(body);
-	 * 
-	 * // return missionService.updateMissionService(body, cargoForJourney,
-	 * cargoForMission, cargoForOtherMission); return null; }
-	 */
-//	public Map<String, Serializable> updateMissionDetails(
-//			@RequestParam(value = "missionID", required = true) String missionID, @RequestBody Map<String, ?> props) {
-//		logger.info("missionID" + missionID);
-//		return missionService.updateMissionDetailsService(missionID, props);
-//	}
+	@PutMapping("")
+	public Map<String, Serializable> updateMissionDetails(
+			@RequestParam(value = "missionID", required = true) String missionID, @RequestBody Map<String, ?> props) {
+		logger.info("missionID" + missionID);
+		return missionService.updateMissionDetailsService(missionID, props);
+	}
 
 }
