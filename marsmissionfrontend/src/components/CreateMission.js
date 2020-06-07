@@ -4,7 +4,12 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Redirect } from 'react-router-dom';
 import axios from "axios"
-import fileTemplate from '../fileTemplates/cargoForJourney.csv'
+import cargoForJourneyTemplate from '../fileTemplates/cargoForJourney.csv'
+import cargoForMissionTemplate from '../fileTemplates/cargoForMission.csv'
+import cargoForOtherMissionTemplate from '../fileTemplates/cargoForOtherMission.csv'
+import moment from 'moment';
+import fs from 'fs'
+import { isNull } from 'util';
 
 
 export default class CreateMission extends Component {
@@ -22,8 +27,8 @@ export default class CreateMission extends Component {
             missionStatus: '',
             locationID: '',
             cargoForJourney: null,
-            cargoForMission: '',
-            cargoForOtherMission: '',
+            cargoForMission: null,
+            cargoForOtherMission: null,
             employeeTitle: '',
             noOfEmployee: '',
             employmentRequirements: [],
@@ -35,7 +40,8 @@ export default class CreateMission extends Component {
             missionStatusList: [],
             coordinatorNameList: [],
             locationList: [],
-            jobID: null
+            jobID: null,
+            jobIdList: []
         }
         this.handleInputChange = this.handleInputChange.bind(this)
         this.handleCountryOriginSelect = this.handleCountryOriginSelect.bind(this)
@@ -128,7 +134,103 @@ export default class CreateMission extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();     // prevents default behavior of putting state values in URL
-        console.log(this.state)
+        // fetch("../fileTemplates/cargoForOtherMission.csv")
+        //     .then(res => {
+        //         console.log(res)
+        //     })
+        // console.log(data)
+
+        let forJourney = false
+        let forMission = false
+        let forOtherMission = false
+        let missionName = false
+        let missionDesc = false
+        let coordinator = false
+        let launchDate = false
+
+        if (this.state.missionName === "") {
+            alert("Mission Name is mandatory")
+        } else {
+            missionName = true
+        }
+
+        if (this.state.missionDescription === "") {
+            alert("Mission description is mandatory")
+        } else {
+            missionDesc = true
+        }
+
+        if (this.state.coordinatorID === "") {
+            alert("Coordinator is mandatory")
+        } else {
+            coordinator = true
+        }
+
+        if (this.state.launchDate === "") {
+            alert("Launch Date is mandatory")
+        } else {
+            launchDate = true
+        }
+
+        if (this.state.cargoForJourney !== null && this.state.cargoForJourney.name !== 'cargoForJourney.csv') {
+            alert("Filename for Cargo For Journey must be cargoForJourney.csv. Please use correct file name.")
+        } else if (this.state.cargoForJourney === null) {
+            alert("Cargo For Journey is mandatory")
+        } else {
+            forJourney = true
+        }
+
+        if (this.state.cargoForMission !== null && this.state.cargoForMission.name !== 'cargoForMission.csv') {
+            alert("Filename for Cargo For Mission must be cargoForMission.csv. Please use correct file name.")
+        } else if (this.state.cargoForMission === null) {
+            alert("Cargo for mission is mandatory")
+        } else {
+            forMission = true
+        }
+
+        if (this.state.cargoForOtherMission !== null && this.state.cargoForOtherMission.name !== 'cargoForOtherMission.csv') {
+            alert("Filename for Cargo For Other Mission must be cargoForOtherMission.csv. Please use correct file name.")
+        } else if (this.state.cargoForOtherMission === null) {
+            alert("Cargo for other mission is mandatory")
+        } else {
+            forOtherMission = true
+        }
+
+        if (forJourney && forMission && forOtherMission && missionName && missionDesc && coordinator && launchDate) {
+            console.log("State", this.state)
+            const propss = {
+                "missionName": this.state.missionName,
+                "missionDetails": this.state.missionDescription,
+                "countryAllowed": this.state.countryAllowed.map(o => o.country_id),
+                "location": this.state.locationID,
+                "jobID": this.state.jobIdList,
+                "statusID": this.state.missionStatus,
+                "countryOrigin": this.state.countryOriginID,
+                "launchDate": moment(this.state.launchDate).format("YYYY-MM-DD"),
+                "duration": this.state.duration,
+                "coordinatorID": this.state.coordinatorID,
+            }
+            // POST request for Mission microservice
+            const formData = new FormData()
+            formData.append("cargoForJourney", this.state.cargoForJourney)
+            formData.append("cargoForMission", this.state.cargoForMission)
+            formData.append("cargoForOtherMission", this.state.cargoForOtherMission)
+            formData.append("props", JSON.stringify(propss))
+            axios.post("http://localhost:8082/mom/mission/",
+                formData
+            )
+                .then(response => {
+                    console.log(response)
+                    if (response.data.status === "success") {
+                        alert("Mission successfully created, going back to home page...")
+                        this.setState({ redirect: true })
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        }
+
     }
 
     handleCountryOriginSelect = (e) => {
@@ -241,16 +343,22 @@ export default class CreateMission extends Component {
                         const json = res.data
                         console.log("Job POST response: ", json)
                         this.setState({
-                            jobID: res.data.jobID
+                            jobID: res.data.jobID,
+                            employmentRequirements: []
                         })
+                        this.setState(prevState => {
+                            let jobIdList = prevState.jobIdList.concat(this.state.jobID)
+                            return {
+                                jobIdList
+                            }
+                        })
+                        alert("Job added with job ID: " + this.state.jobID + ". You may add another job with required employment.")
                     }
-
-
                 })
                 .catch(err => {
                     console.log(err)
                 })
-            alert(this.state.jobName + " added")
+            // alert(this.state.jobName + " added")
         }
     }
 
@@ -317,7 +425,8 @@ export default class CreateMission extends Component {
                         name="missionName"
                         placeholder="Enter Mission Name"
                         value={this.state.missionName}
-                        onChange={e => this.handleInputChange(e)} />
+                        onChange={e => this.handleInputChange(e)}
+                        required={true} />
                     <br />
                     <label>Mission Description: </label>
                     <input
@@ -382,16 +491,16 @@ export default class CreateMission extends Component {
                     <br />
                     <label>Cargo For Journey: </label>
                     <input type="file" name="cargoForJourney" onChange={this.handleOnFileChange} />
-                    <a href={fileTemplate} download="cargoForJourney.csv">Download Template</a>
-                    <button onClick={this.handleFileUpload}>Upload</button>
+                    <a href={cargoForJourneyTemplate} download="cargoForJourney.csv">Download Template</a>
+                    {/* <button onClick={this.handleFileUpload}>Upload</button> */}
                     <br />
                     <label>Cargo For Mission: </label>
                     <input type="file" name="cargoForMission" onChange={this.handleOnFileChange} />
-                    <a href="#" download="file.txt">Download Template</a>
+                    <a href={cargoForMissionTemplate} download="cargoForMission.csv">Download Template</a>
                     <br />
-                    <label>Cargo For Journey: </label>
+                    <label>Cargo For Other Mission: </label>
                     <input type="file" name="cargoForOtherMission" onChange={this.handleOnFileChange} />
-                    <a href="#" download="file.txt">Download Template</a>
+                    <a href={cargoForOtherMissionTemplate} download="cargoForOtherMission.csv">Download Template</a>
                     <br />
                     <label>Job Name: </label>
                     <input
