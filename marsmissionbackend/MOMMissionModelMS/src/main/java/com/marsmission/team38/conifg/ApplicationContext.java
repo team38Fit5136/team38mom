@@ -1,23 +1,25 @@
 package com.marsmission.team38.conifg;
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.core.io.FileSystemResource;
-
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 @Configuration
 @EnableAutoConfiguration
 public class ApplicationContext {
 
-	//variables for storing properties file path
+	// variables for storing properties file path
 	public static String propertyFilePath = System.getenv("property_path");
 	public static String propertyFilePath1 = System.getenv("mission_path");
 
@@ -33,7 +35,8 @@ public class ApplicationContext {
 		return properties;
 	}
 
-	//Method for getting global property
+	
+	// Method for getting global property
 	public static String getGlobalProperty(String propertyName) {
 		Properties properties = new Properties();
 		String propertyValue = "";
