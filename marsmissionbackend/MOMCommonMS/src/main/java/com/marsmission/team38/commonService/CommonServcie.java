@@ -274,56 +274,6 @@ public class CommonServcie {
 	}
 
 	// Cargo
-	// Method for adding cargo
-	public String addCargoService(MultipartFile file, String fileType) {
-		logger.info("addCargoService " + fileType);
-
-		return null;
-	}
-
-	public Map<String, Serializable> addCargoService(Map<String, ?> props) {
-		Map<String, Serializable> result = new HashMap<>();
-
-		long cargoId = 0;
-
-		String cargoJourney = (String) (props.containsKey("cargoJourney") ? props.get("cargoJourney") : null);
-		String cargoMission = (String) (props.containsKey("cargoMission") ? props.get("cargoMission") : null);
-		String cargoOtherMission = (String) (props.containsKey("cargoOtherMission") ? props.get("cargoOtherMission")
-				: null);
-
-		if ((cargoJourney == null || (cargoJourney.toString().equalsIgnoreCase("")))
-				|| (cargoMission == null || (cargoMission.toString().equalsIgnoreCase("")))
-				|| (cargoOtherMission == null || (cargoOtherMission.toString().equalsIgnoreCase("")))) {
-			logger.warn("cargo Journey, cargoMission and cargoOtherMission are mandatory to add the cargo");
-			result.put("responseMsg",
-					"cargo Journey, cargoMission and cargoOtherMission are mandatory to add the cargo");
-			result.put("status", "failed");
-			return result;
-		}
-		try {
-			cargoId = commonDAO.addCargoDAO(props);
-			if (cargoId != 0) {
-				logger.info("added successfully");
-				result.put("cargoId ", cargoId);
-				result.put("status", "success");
-				result.put("responseMsg", "successfully inserted");
-			} else {
-				logger.error("Entered Details are not correct ");
-				result.put("status", "failed");
-				result.put("responseMsg", "Enter Details are not correct ");
-			}
-		} catch (DuplicateKeyException e) {
-			logger.error("Duplciate key error" + e);
-			result.put("status", "failed");
-			result.put("responseMsg", "Duplicate entry already present");
-		} catch (UncategorizedSQLException e) {
-			logger.error("Uncategorized  error" + e);
-			result.put("status", "failed");
-			result.put("responseMsg", "Enter data is not correct");
-		}
-		return result;
-	}
-
 	// Method for getting cargo
 	public Map<String, Serializable> getCargoDetailsService(String cargoID) {
 		logger.info("in getCargoDetailsService");

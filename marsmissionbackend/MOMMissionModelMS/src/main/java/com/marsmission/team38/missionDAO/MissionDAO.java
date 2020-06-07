@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,12 +33,16 @@ public class MissionDAO {
 
 	// adding Mission details in DB
 	public int addMissionDAO(Integer coordinatorID, Integer statusID, Integer countryOrigin, Integer duration,
-			String launchDate, String missionDetails, String missionName) {
+			String launchDate, String missionDetails, String missionName) throws ParseException {
 
 		logger.info("in addMissionDAO");
 		String sql = "insert into mission_details( `coordinator_id`, `country_origin`, `duration`, `launch_date`, `mission_details`, `mission_name`, `status_id`)"
 				+ " values(?,?,?,?,?,?,?)";
-
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); // your template here
+		java.util.Date dateStr = formatter.parse(launchDate);
+		java.sql.Date dateDB = new java.sql.Date(dateStr.getTime());
+		
 		try {
 			final PreparedStatementCreator psc = new PreparedStatementCreator() {
 				public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
@@ -44,7 +50,7 @@ public class MissionDAO {
 					ps.setInt(1, coordinatorID);
 					ps.setInt(2, countryOrigin);
 					ps.setInt(3, duration);
-					ps.setString(4, launchDate);
+					ps.setDate(4, dateDB);
 					ps.setString(5, missionDetails);
 					ps.setString(6, missionName);
 					ps.setInt(7, statusID);
@@ -164,13 +170,13 @@ public class MissionDAO {
 
 	}
 
-	public int addAllowedCountry(int missionID, List<String> countryAllowed) {
+	public int addAllowedCountry(int missionID, List<?> countryAllowed) {
 
 		logger.info("in addAllowedCountry");
 		String values = "";
 		for (int i = 0; i < countryAllowed.size(); i++) {
 			logger.info(countryAllowed.get(i));
-			values += " (" + missionID + "'," + countryAllowed.get(i) + "), ";
+			values += " (" + missionID + "," + countryAllowed.get(i) + "), ";
 		}
 		String sql = "insert into country_allowed(`mission_id`,`country_id`) values "
 				+ values.substring(0, values.length() - 2);
@@ -231,18 +237,44 @@ public class MissionDAO {
 		}
 	}
 
-	public int updateMissiontoJob(int missionID, List<String> jobIDs) {
+	public int updateMissiontoJob(int missionID, List<?> jobIDs) {
 		logger.info("in addAllowedCountry");
-		String values = "";
+		String values = " (";
 		for (int i = 0; i < jobIDs.size(); i++) {
 			logger.info(jobIDs.get(i));
-			values += " (" + jobIDs + ",";
+			values += jobIDs.get(i) + ",";
 		}
-		String sql = "update job set `mission_id`=" + missionID + " where job_id in" + values + ")";
+		String sql = "update job set `mission_id`=" + missionID + " where job_id in"
+				+ values.substring(0, values.length() - 1) + ")";
 		logger.info(sql);
 		try {
 			int rsp = jdbc.update(sql);
 			return rsp;
+		} catch (Exception e) {
+			logger.error(e);
+			throw e;
+		}
+	}
+
+	public int addCargoDAO(String jsonObject, int missionID) {
+		logger.info("in addCargoDAO");
+
+		String sql = "insert into cargo(`cargo`, `mission_id`)" + " values(?,?)";
+		try {
+			final PreparedStatementCreator psc = new PreparedStatementCreator() {
+				public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+					final PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+					ps.setString(1, jsonObject);
+					ps.setInt(2, missionID);
+					return ps;
+				}
+			};
+			// The newly generated key will be saved in this object
+			final KeyHolder holder = new GeneratedKeyHolder();
+			jdbc.update(psc, holder);
+			final int cargoID = holder.getKey().intValue();
+
+			return cargoID;
 		} catch (Exception e) {
 			logger.error(e);
 			throw e;

@@ -146,15 +146,6 @@ public class CommonController {
 
 	//Cargo
 
-	//api call for adding cargo
-	
-
-    @PostMapping("/upload")
-    public String addCargo(@RequestParam("file") MultipartFile file, 
-                         @RequestParam(value = "fileType", required = true, defaultValue = "null") String fileType){
-		logger.info("in addCargo"); //log info for displaying on console as well as in log file, currently in addCargo
-		return commonService.addCargoService(file,fileType);
-	}
 
 	
 	//api call for getting cargo

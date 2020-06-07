@@ -336,39 +336,7 @@ public class CommonDAO {
 
 	// Cargo
 	// Method for adding cargo
-	public long addCargoDAO(Map<String, ?> props) {
-		logger.info("in addCargoDAO");
-
-		String sql = "insert into cargo(`cargo_journey`, `cargo_mission`,`cargo_other_mission`)" + " values(?,?,?)";
-
-		String cargoJourney = (String) (props.containsKey("cargoJourney") ? props.get("cargoJourney") : null);
-		String cargoMission = (String) (props.containsKey("cargoMission") ? props.get("cargoMission") : null);
-		String cargoOtherMission = (String) (props.containsKey("cargoOtherMission") ? props.get("cargoOtherMission")
-				: null);
-
-		try {
-			final PreparedStatementCreator psc = new PreparedStatementCreator() {
-				public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
-					final PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-
-					ps.setString(1, cargoJourney);
-					ps.setString(2, cargoMission);
-					ps.setString(3, cargoOtherMission);
-
-					return ps;
-				}
-			};
-			// The newly generated key will be saved in this object
-			final KeyHolder holder = new GeneratedKeyHolder();
-			jdbc.update(psc, holder);
-			final long cargoID = holder.getKey().longValue();
-			return cargoID;
-		} catch (Exception e) {
-			logger.error(e);
-			throw e;
-		}
-	}
-
+	
 	// Method for getting cargo
 	public Map<String, Serializable> getCargoDetailsDAO(String cargoID) {
 		logger.info("in getCargoDetailsDAO");
