@@ -84,6 +84,10 @@ export default class SelectShuttle extends Component {
         this.handleBack = this.handleBack.bind(this)
     }
 
+    componentDidMount() {
+        // get API for mission
+    }
+
     handleMissionChange = (e) => {
         // console.log(e.target)
         this.setState({ missionID: e.target.value })
