@@ -5,7 +5,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -25,49 +28,40 @@ public class MissionDAO {
 
 	@Autowired
 	private JdbcTemplate jdbc;
-	//logger variable to print logs
+	// logger variable to print logs
 	private static Log logger = LogFactory.getLog(MissionDAO.class);
 
-	//adding Mission details in DB
-	public long addMissionDAO(Map<String, ?> props) {
+	// adding Mission details in DB
+	public int addMissionDAO(Integer coordinatorID, Integer statusID, Integer countryOrigin, Integer duration,
+			String launchDate, String missionDetails, String missionName) throws ParseException {
+
 		logger.info("in addMissionDAO");
-		String sql = "insert into mission_details(`cargo_id`, `coordinator_id`, `country_allowed`, `country_origin`, `duration`,  `launch_date`, `location_id`, `mission_details`, `mission_name`, `shuttle_id`, `status_id`)"
-				+ " values(?,?,?,?,?,?,?,?,?,?,?)";
-
-		int cargoID = (int) (props.containsKey("cargoID") ? props.get("cargoID") : 0);
-		int coordinatorID = (int) (props.containsKey("coordinatorID") ? props.get("coordinatorID") : 0);
-		int locationID = (int) (props.containsKey("locationID") ? props.get("locationID") : 0);
-		int shuttleID = (int) (props.containsKey("shuttleID") ? props.get("shuttleID") : 0);
-		int statusID = (int) (props.containsKey("statusID") ? props.get("statusID") : 1);
-		int countryOrigin = (int) (props.containsKey("countryOrigin") ? props.get("countryOrigin") : 0);
-
-		String countryAllowed = (String) (props.containsKey("countryAllowed") ? props.get("countryAllowed") : null);// Json
-		String duration = (String) (props.containsKey("duration") ? props.get("duration") : null);
-		String launchDate = (String) (props.containsKey("launchDate") ? props.get("launchDate") : null);
-		String missionDetails = (String) (props.containsKey("missionDetails") ? props.get("missionDetails") : null);
-		String missionName = (String) (props.containsKey("missionName") ? props.get("missionName") : null);
+		String sql = "insert into mission_details( `coordinator_id`, `country_origin`, `duration`, `launch_date`, `mission_details`, `mission_name`, `status_id`)"
+				+ " values(?,?,?,?,?,?,?)";
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); // your template here
+		java.util.Date dateStr = formatter.parse(launchDate);
+		java.sql.Date dateDB = new java.sql.Date(dateStr.getTime());
+		
 		try {
 			final PreparedStatementCreator psc = new PreparedStatementCreator() {
 				public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
 					final PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-					ps.setInt(1, cargoID);
-					ps.setInt(2, coordinatorID);
-					ps.setString(3, countryAllowed);
-					ps.setInt(4, countryOrigin);
-					ps.setString(5, duration);
-					ps.setString(6, launchDate);
-					ps.setInt(7, locationID);
-					ps.setString(8, missionDetails);
-					ps.setString(9, missionName);
-					ps.setInt(10, shuttleID);
-					ps.setInt(11, statusID);
+					ps.setInt(1, coordinatorID);
+					ps.setInt(2, countryOrigin);
+					ps.setInt(3, duration);
+					ps.setDate(4, dateDB);
+					ps.setString(5, missionDetails);
+					ps.setString(6, missionName);
+					ps.setInt(7, statusID);
 					return ps;
 				}
 			};
 			// The newly generated key will be saved in this object
 			final KeyHolder holder = new GeneratedKeyHolder();
 			jdbc.update(psc, holder);
-			final long missionID = holder.getKey().longValue();
+			final int missionID = holder.getKey().intValue();
+
 			return missionID;
 		} catch (Exception e) {
 			logger.error(e);
@@ -75,14 +69,14 @@ public class MissionDAO {
 		}
 	}
 
-	//getting mission details from DB
+	// getting mission details from DB
 	public Map<String, Serializable> getMissiondetailsDAO(String missionID) {
 		logger.info("in getMissiondetailsDAO");
 
 		Map<String, Serializable> result = new HashMap<>();
 
 		try {
-			//creating sql query for get mission details
+			// creating sql query for get mission details
 			String sql = "SELECT * FROM mission_details where (mission_id = '" + missionID + "' or mission_name= '"
 					+ missionID + "')";
 
@@ -96,14 +90,14 @@ public class MissionDAO {
 		}
 	}
 
-	//updating mission details in DB
+	// updating mission details in DB
 	public Map<String, Serializable> updatedetailsDAO(String missionID, Map<String, ?> props) {
 		// TODO Auto-generated method stub
 		logger.info("updatedetailsDAO");
 		String sql = "update mission_details set ";
 		String updateQuery = "";
 		String whereclause = "";
-		
+
 		logger.info("missionID" + missionID + "props");
 
 		Map<String, Serializable> result = new HashMap<>();
@@ -113,7 +107,6 @@ public class MissionDAO {
 					: ", `coordinator_id`= \"" + props.get("coordinatorID") + "\" ";
 		}
 
-		
 		if (props.containsKey("locationID")) {
 			updateQuery += updateQuery.isEmpty() ? "`location_id`= \"" + props.get("locationID") + "\" "
 					: ", `location_id`= \"" + props.get("locationID") + "\" ";
@@ -152,31 +145,140 @@ public class MissionDAO {
 			updateQuery += updateQuery.isEmpty() ? "`mission_details`= \"" + props.get("missionDetails") + "\" "
 					: ", `mission_details`= \"" + props.get("missionDetails") + "\" ";
 		}
-		
-		
-		//final sql query
+
+		// final sql query
 		sql += updateQuery + " " + "where `mission_id` = " + missionID;
 		logger.info("final sql------------" + sql);
 
 		try {
-			if (jdbc.update(sql) == 1)
-			{
+			if (jdbc.update(sql) == 1) {
 				result.put("status", "success");
 				result.put("responseMsg", "successfully updated mission");
-				
-			}
-			else {
+
+			} else {
 				result.put("status", "failed");
 				result.put("responseMsg", "failed to updated mission, No mission present with given missionID");
 			}
-			//returning the status and responseMsg
+			// returning the status and responseMsg
 			return result;
-			
+
 		} catch (Exception e) {
 			result.put("status", "failed");
 			result.put("responseMsg", "failed to updated mission because of some exception");
 			return result;
 		}
-		
+
 	}
+
+	public int addAllowedCountry(int missionID, List<?> countryAllowed) {
+
+		logger.info("in addAllowedCountry");
+		String values = "";
+		for (int i = 0; i < countryAllowed.size(); i++) {
+			logger.info(countryAllowed.get(i));
+			values += " (" + missionID + "," + countryAllowed.get(i) + "), ";
+		}
+		String sql = "insert into country_allowed(`mission_id`,`country_id`) values "
+				+ values.substring(0, values.length() - 2);
+		logger.info(sql);
+		try {
+			int rsp = jdbc.update(sql);
+			return rsp;
+		} catch (Exception e) {
+			logger.error(e);
+			throw e;
+		}
+	}
+
+	public void deleteMissionDAO(int missionID) {
+		String sql = "delete from mission_details where mission_id = " + missionID;
+		logger.info(sql);
+		try {
+			jdbc.update(sql);
+		} catch (Exception e) {
+			logger.error(e);
+			throw e;
+		}
+	}
+
+	public int addMissionRelatedLocation(int missionID, Integer locationID) {
+		logger.info("in addMissionRelatedLocation");
+		String sql = "insert into mission_location(`mission_id`,`location_id`) values (" + missionID + "," + locationID
+				+ ")";
+		logger.info(sql);
+		try {
+			int rsp = jdbc.update(sql);
+			return rsp;
+		} catch (Exception e) {
+			logger.error(e);
+			throw e;
+		}
+	}
+
+	public void deleteAllowedCountry(int missionID) {
+		String sql = "delete from country_allowed where mission_id = " + missionID;
+		logger.info(sql);
+		try {
+			jdbc.update(sql);
+		} catch (Exception e) {
+			logger.error(e);
+			throw e;
+		}
+	}
+
+	public void deleteMissionRelatedLocation(int missionID) {
+		String sql = "delete from mission_location where mission_id = " + missionID;
+		logger.info(sql);
+		try {
+			jdbc.update(sql);
+		} catch (Exception e) {
+			logger.error(e);
+			throw e;
+		}
+	}
+
+	public int updateMissiontoJob(int missionID, List<?> jobIDs) {
+		logger.info("in addAllowedCountry");
+		String values = " (";
+		for (int i = 0; i < jobIDs.size(); i++) {
+			logger.info(jobIDs.get(i));
+			values += jobIDs.get(i) + ",";
+		}
+		String sql = "update job set `mission_id`=" + missionID + " where job_id in"
+				+ values.substring(0, values.length() - 1) + ")";
+		logger.info(sql);
+		try {
+			int rsp = jdbc.update(sql);
+			return rsp;
+		} catch (Exception e) {
+			logger.error(e);
+			throw e;
+		}
+	}
+
+	public int addCargoDAO(String jsonObject, int missionID) {
+		logger.info("in addCargoDAO");
+
+		String sql = "insert into cargo(`cargo`, `mission_id`)" + " values(?,?)";
+		try {
+			final PreparedStatementCreator psc = new PreparedStatementCreator() {
+				public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+					final PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+					ps.setString(1, jsonObject);
+					ps.setInt(2, missionID);
+					return ps;
+				}
+			};
+			// The newly generated key will be saved in this object
+			final KeyHolder holder = new GeneratedKeyHolder();
+			jdbc.update(psc, holder);
+			final int cargoID = holder.getKey().intValue();
+
+			return cargoID;
+		} catch (Exception e) {
+			logger.error(e);
+			throw e;
+		}
+	}
+
 }
