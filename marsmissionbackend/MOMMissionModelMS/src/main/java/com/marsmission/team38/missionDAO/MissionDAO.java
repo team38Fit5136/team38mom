@@ -38,11 +38,14 @@ public class MissionDAO {
 		logger.info("in addMissionDAO");
 		String sql = "insert into mission_details( `coordinator_id`, `country_origin`, `duration`, `launch_date`, `mission_details`, `mission_name`, `status_id`)"
 				+ " values(?,?,?,?,?,?,?)";
-		
+
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); // your template here
+		if (launchDate == null || launchDate.toString().equalsIgnoreCase("")) {
+			launchDate = "1999-12-12";
+		}
 		java.util.Date dateStr = formatter.parse(launchDate);
 		java.sql.Date dateDB = new java.sql.Date(dateStr.getTime());
-		
+
 		try {
 			final PreparedStatementCreator psc = new PreparedStatementCreator() {
 				public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
