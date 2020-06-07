@@ -77,12 +77,18 @@ public class MissionDAO {
 		logger.info("in getMissiondetailsDAO");
 
 		Map<String, Serializable> result = new HashMap<>();
+		String sql = "SELECT * FROM mission_details  md join cargo ca on ca.mission_id=md.mission_id ";
+		logger.info("missionID" + missionID);
 
 		try {
 			// creating sql query for get mission details
-			String sql = "SELECT * FROM mission_details where (mission_id = '" + missionID + "' or mission_name= '"
-					+ missionID + "')";
 
+			sql += " where (md.mission_id = '" + missionID + "' or md.mission_name= '" + missionID + "')";
+			logger.info(sql);
+			if (jdbc.queryForList(sql).size() <= 0 || jdbc.queryForList(sql).size() > 1) {
+				result.put("status", "failed");
+				return result;
+			}
 			result.put("status", "Success");
 			result.put("responseMsg", (Serializable) jdbc.queryForMap(sql));
 			return result;
@@ -194,6 +200,7 @@ public class MissionDAO {
 	}
 
 	public void deleteMissionDAO(int missionID) {
+
 		String sql = "delete from mission_details where mission_id = " + missionID;
 		logger.info(sql);
 		try {

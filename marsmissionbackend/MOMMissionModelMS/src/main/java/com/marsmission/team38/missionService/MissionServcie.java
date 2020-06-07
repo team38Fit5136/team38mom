@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,9 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
@@ -21,6 +25,10 @@ import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marsmission.team38.missionDAO.MissionDAO;
 
 @Service
@@ -33,6 +41,8 @@ public class MissionServcie {
 
 	@Autowired
 	private HttpServletRequest request;
+
+	ObjectMapper mapper = new ObjectMapper();
 
 	// variables values form property files
 
@@ -69,15 +79,28 @@ public class MissionServcie {
 
 		//
 		int missionID = 0;
-		Integer coordinatorID = (int) (body.containsKey("coordinatorID") ? body.get("coordinatorID") : 1);
-		Integer locationID = (int) (body.containsKey("locationID") ? body.get("locationID") : 1);
-		Integer statusID = (int) (body.containsKey("statusID") ? body.get("statusID") : 1);
-		Integer countryOrigin = (int) (body.containsKey("countryOrigin") ? body.get("countryOrigin") : 1);
+		Integer coordinatorID = (int) (body.containsKey("coordinatorID")
+				? body.get("coordinatorID").toString().equalsIgnoreCase("") ? 1 : body.get("coordinatorID")
+				: 1);
+
+		Integer locationID = (int) (body.containsKey("locationID")
+				? body.get("locationID").toString().equalsIgnoreCase("") ? 1 : body.get("locationID")
+				: 1);
+		Integer statusID = (int) (body.containsKey("statusID")
+				? body.get("statusID").toString().equalsIgnoreCase("") ? 1 : body.get("statusID")
+				: 1);
+
+		Integer countryOrigin = (int) (body.containsKey("countryOrigin")
+				? body.get("countryOrigin").toString().equalsIgnoreCase("") ? 1 : body.get("countryOrigin")
+				: 1);
+
+		Integer duration = (int) (body.containsKey("duration")
+				? body.get("duration").toString().equalsIgnoreCase("") ? 0 : body.get("duration")
+				: 0);
 
 		List<?> countryAllowed = (List<?>) (body.containsKey("countryAllowed") ? body.get("countryAllowed") : null);// array
 		List<?> jobID = (List<?>) (body.containsKey("jobID") ? body.get("jobID") : null);// array
 
-		Integer duration = (Integer) (body.containsKey("duration") ? body.get("duration") : 0);
 		String launchDate = (String) (body.containsKey("launchDate") ? body.get("launchDate") : null);
 		String missionDetails = (String) (body.containsKey("missionDetails") ? body.get("missionDetails") : null);
 		String missionName = (String) (body.containsKey("missionName") ? body.get("missionName") : null);
@@ -316,4 +339,76 @@ public class MissionServcie {
 		return result;
 	}
 
+	public Map<String, ?> getMissionDetailsshuttle(String missionID) {
+		logger.info("in getMissionDetailsService");
+
+		Map<String, Serializable> result = missionDAO.getMissiondetailsDAO(missionID);
+		if (result.get("status").toString().equalsIgnoreCase("failed")) {
+			logger.error(" mission does not have any cargo for this please provide cargo information");
+			result.put("responseMsg", "mission does not exist with given credentials");
+			return result;
+		}
+//		eachCargoQuantiy(result);
+//		logger.info(eachCargoQuantiy(result));
+		Map<String, Object> resp = new HashMap<String, Object>();
+		String jsonInString = eachCargoQuantiy(result).toString().replaceAll("\\\\", "");
+		try {
+			resp = mapper.readValue(jsonInString, new TypeReference<Map<String, Object>>() {
+			});
+			mapper.writerWithDefaultPrettyPrinter().writeValueAsString(resp);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		result.put("responseMsg", (Serializable) resp);
+		logger.info("--------------" + result);
+		return result;
+	}
+
+	public JSONObject eachCargoQuantiy(Map<String, Serializable> result) {
+		JSONObject obj = null;
+		try {
+			obj = new JSONObject(result.get("responseMsg").toString());
+
+			JSONObject obj1 = obj.getJSONObject("cargo");
+
+			JSONArray cargoForJourneyQuant = obj1.getJSONArray("cargoForJourney");
+			int cargoForJourneyQuantity = cargoQuantiy(cargoForJourneyQuant);
+			obj.put("cargoForJourneyQuantityt", cargoForJourneyQuantity);
+
+			JSONArray cargoForMissionQuant = obj1.getJSONArray("cargoForMission");
+			int cargoForMissionQuantity = cargoQuantiy(cargoForMissionQuant);
+			obj.put("cargoForMissionQuantity", cargoForMissionQuantity);
+
+			JSONArray cargoForOtherMissionQuant = obj1.getJSONArray("cargoForOtherMission");
+			int cargoForOtherMissionQuantity = cargoQuantiy(cargoForOtherMissionQuant);
+			obj.put("cargoForOtherMissionQuantity", cargoForOtherMissionQuantity);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return obj;
+	}
+
+	public int cargoQuantiy(JSONArray cargoForJourneyQuant) {
+		int total = 0;
+		try {
+			for (int i = 0; i < cargoForJourneyQuant.length(); i++) {
+				JSONObject objects;
+				objects = cargoForJourneyQuant.getJSONObject(i);
+				Iterator key = objects.keys();
+				while (key.hasNext()) {
+					String k = key.next().toString();
+					total += Integer.parseInt(objects.getString(k));
+				}
+			}
+
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return total;
+
+	}
 }
