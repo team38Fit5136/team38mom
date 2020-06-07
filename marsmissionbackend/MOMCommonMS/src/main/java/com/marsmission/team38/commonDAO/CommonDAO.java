@@ -118,10 +118,12 @@ public class CommonDAO {
 		Map<String, Serializable> result = new HashMap<>();
 
 		try {
-			if (shuttleID.equalsIgnoreCase("null")) {
+			if (!shuttleID.equalsIgnoreCase("null")) {
 				sql += " where shuttle_id = " + shuttleID + "";
 			}
 			result.put("status", "Success");
+
+			logger.info("sql" + sql);
 			result.put("responseMsg", (Serializable) jdbc.queryForList(sql));
 			return result;
 		} catch (Exception e) {
@@ -411,7 +413,7 @@ public class CommonDAO {
 
 		Map<String, Serializable> result = new HashMap<>();
 		logger.info("putShuttleDetailsService");
-		
+
 		String sql = " update shuttle set `mission_id` = " + missionID + " where `shuttle_id` = " + shuttleID + "";
 		try {
 			if (jdbc.update(sql) != 0) {
