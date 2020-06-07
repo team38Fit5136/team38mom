@@ -367,7 +367,7 @@ public class MissionServcie {
 
 			JSONArray cargoForJourneyQuant = obj1.getJSONArray("cargoForJourney");
 			int cargoForJourneyQuantity = cargoQuantiy(cargoForJourneyQuant);
-			obj.put("cargoForJourneyQuantityt", cargoForJourneyQuantity);
+			obj.put("cargoForJourneyQuantity", cargoForJourneyQuantity);
 
 			JSONArray cargoForMissionQuant = obj1.getJSONArray("cargoForMission");
 			int cargoForMissionQuantity = cargoQuantiy(cargoForMissionQuant);
