@@ -31,7 +31,7 @@ import com.marsmission.team38.missionService.MissionServcie;
  */
 @RestController
 @RequestMapping("/mom/mission")
-//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000")
 public class MissionController {
 
 	// logger variable to print logs
