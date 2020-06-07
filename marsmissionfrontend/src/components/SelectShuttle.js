@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom'
 
 export default class SelectShuttle extends Component {
     constructor(props) {
@@ -73,12 +74,14 @@ export default class SelectShuttle extends Component {
                     origin: "United Kingdom"
                 }
             ],
-            shuttleID: ''
+            shuttleID: '',
+            redirect: false
         }
         this.handleMissionChange = this.handleMissionChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleMissionSelect = this.handleMissionSelect.bind(this)
         this.handleShuttleChange = this.handleShuttleChange.bind(this)
+        this.handleBack = this.handleBack.bind(this)
     }
 
     handleMissionChange = (e) => {
@@ -101,7 +104,16 @@ export default class SelectShuttle extends Component {
         this.setState({ shuttleID: e.target.value })
     }
 
+    handleBack = () => {
+        this.setState({ redirect: true })
+    }
+
     render() {
+        // redirect page for Back button
+        if (this.state.redirect) {
+            return <Redirect push to="/navigation" />
+        }
+
         // selected mission
         const missionList = this.state.missionList
         const selectedMission = missionList.filter(o => { return o.id == this.state.missionID })
@@ -132,6 +144,7 @@ export default class SelectShuttle extends Component {
                 {selectedShuttle.map(shuttle => <SelectedShuttle key={shuttle.id} shuttle={shuttle} />)}
                 <br />
                 <input type="button" value="Submit" onClick={this.handleSubmit} />
+                <input type="button" value="Back" onClick={this.handleBack} style={{ marginLeft: "10px" }}/>
             </div>
         )
     }
