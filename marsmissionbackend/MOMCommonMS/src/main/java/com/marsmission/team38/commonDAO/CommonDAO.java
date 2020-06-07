@@ -114,15 +114,15 @@ public class CommonDAO {
 	public Map<String, Serializable> getShuttleDetailsDAO(String shuttleID) {
 		// TODO Auto-generated method stub
 		logger.info("in getShuttleDetailsDAO");
-
+		String sql = "SELECT * FROM shuttle ";
 		Map<String, Serializable> result = new HashMap<>();
 
 		try {
-			String sql = "SELECT * FROM shuttle where (shuttle_id = '" + shuttleID + "' or shuttle_name= '" + shuttleID
-					+ "')";
-
+			if (shuttleID.equalsIgnoreCase("null")) {
+				sql += " where shuttle_id = " + shuttleID + "";
+			}
 			result.put("status", "Success");
-			result.put("responseMsg", (Serializable) jdbc.queryForMap(sql));
+			result.put("responseMsg", (Serializable) jdbc.queryForList(sql));
 			return result;
 		} catch (Exception e) {
 			logger.error("in getShuttleDetailsDAO error" + e);
@@ -336,7 +336,7 @@ public class CommonDAO {
 
 	// Cargo
 	// Method for adding cargo
-	
+
 	// Method for getting cargo
 	public Map<String, Serializable> getCargoDetailsDAO(String cargoID) {
 		logger.info("in getCargoDetailsDAO");
@@ -405,6 +405,28 @@ public class CommonDAO {
 			return result;
 		}
 
+	}
+
+	public Map<String, Serializable> putShuttleDetailsService(String shuttleID, String missionID) {
+
+		Map<String, Serializable> result = new HashMap<>();
+		logger.info("putShuttleDetailsService");
+		
+		String sql = " update shuttle set `mission_id` = " + missionID + " where `shuttle_id` = " + shuttleID + "";
+		try {
+			if (jdbc.update(sql) != 0) {
+				result.put("status", "Success");
+				result.put("responseMsg", "updated the mission for shuttle");
+			} else {
+				result.put("status", "Failed");
+				result.put("responseMsg", (Serializable) jdbc.queryForList(sql));
+			}
+			return result;
+		} catch (Exception e) {
+			logger.error("in getStatusDetailsDAO error" + e);
+			result.put("status", "failed");
+			return result;
+		}
 	}
 
 }

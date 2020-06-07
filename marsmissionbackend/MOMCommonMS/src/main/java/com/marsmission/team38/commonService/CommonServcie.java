@@ -316,4 +316,26 @@ public class CommonServcie {
 
 	}
 
+	public Map<String, Serializable> putShuttleDetailsService(String shuttleID, String missionID) {
+
+		logger.info("in postShuttleDetailsService");
+
+		Map<String, Serializable> result = new HashMap<String, Serializable>();
+
+		if (missionID.equalsIgnoreCase("null")) {
+			logger.error("mission id does not provided");
+			result.put("stauts", "failed");
+			result.put("responseMsg", "mission id does not provided");
+			return result;
+		}
+		if (shuttleID.equalsIgnoreCase("null")) {
+			logger.error(" shuttleID does not provided");
+			result.put("stauts", "failed");
+			result.put("responseMsg", "shuttleID does not provided");
+			return result;
+		}
+
+		return commonDAO.putShuttleDetailsService(shuttleID, missionID);
+	}
+
 }
