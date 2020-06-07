@@ -99,6 +99,33 @@ public class MissionDAO {
 		}
 	}
 
+	public Map<String, Serializable> getMissiondetailsDAOAll(String missionID) {
+		logger.info("in getMissiondetailsDAO");
+
+		Map<String, Serializable> result = new HashMap<>();
+		String sql = "SELECT * FROM mission_details";
+		logger.info("missionID" + missionID);
+
+		try {
+			// creating sql query for get mission details
+			if (!missionID.equalsIgnoreCase("null")) {
+				sql += " where (mission_id = '" + missionID + "' or mission_name= '" + missionID + "')";
+			}
+			logger.info(sql);
+			if (jdbc.queryForList(sql).size() <= 0) {
+				result.put("status", "failed");
+				return result;
+			}
+			result.put("status", "Success");
+			result.put("responseMsg", (Serializable) jdbc.queryForList(sql));
+			return result;
+		} catch (Exception e) {
+			logger.error("in getMissiondetailsDAO error" + e);
+			result.put("status", "failed");
+			return result;
+		}
+	}
+
 	// updating mission details in DB
 	public Map<String, Serializable> updatedetailsDAO(String missionID, Map<String, ?> props) {
 		// TODO Auto-generated method stub
@@ -116,25 +143,11 @@ public class MissionDAO {
 					: ", `coordinator_id`= \"" + props.get("coordinatorID") + "\" ";
 		}
 
-		if (props.containsKey("locationID")) {
-			updateQuery += updateQuery.isEmpty() ? "`location_id`= \"" + props.get("locationID") + "\" "
-					: ", `location_id`= \"" + props.get("locationID") + "\" ";
-		}
-
-		if (props.containsKey("shuttleID")) {
-			updateQuery += updateQuery.isEmpty() ? "`shuttle_id`= \"" + props.get("shuttleID") + "\" "
-					: ", `shuttle_id`= \"" + props.get("shuttleID") + "\" ";
-		}
-
 		if (props.containsKey("statusID")) {
 			updateQuery += updateQuery.isEmpty() ? "`status_id`= \"" + props.get("statusID") + "\" "
 					: ", `status_id`= \"" + props.get("statusID") + "\" ";
 		}
 
-		if (props.containsKey("countryAllowed")) {
-			updateQuery += updateQuery.isEmpty() ? "`country_allowed`= \"" + props.get("countryAllowed") + "\" "
-					: ", `country_allowed`= \"" + props.get("countryAllowed") + "\" ";
-		}
 		if (props.containsKey("countryOrigin")) {
 			updateQuery += updateQuery.isEmpty() ? "`country_origin`= \"" + props.get("countryOrigin") + "\" "
 					: ", `country_origin`= \"" + props.get("countryOrigin") + "\" ";
