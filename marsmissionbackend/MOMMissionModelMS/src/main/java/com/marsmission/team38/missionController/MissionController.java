@@ -27,7 +27,7 @@ import com.marsmission.team38.missionService.MissionServcie;
  */
 @RestController
 @RequestMapping("/mom/mission")
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 public class MissionController {
 
 	// logger variable to print logs
@@ -36,7 +36,6 @@ public class MissionController {
 
 	@Autowired
 	private MissionServcie missionService;
-
 
 	// api call for adding mission
 	@RequestMapping(value = "", method = RequestMethod.POST)
@@ -53,13 +52,32 @@ public class MissionController {
 
 		logger.info(body);
 
-		return missionService.addMissionService(body, cargoForJourney, cargoForMission,
-				cargoForOtherMission);
+		return missionService.addMissionService(body, cargoForJourney, cargoForMission, cargoForOtherMission);
 	}
 
 	// api call for getting mission
 	@GetMapping("")
 	public Map<String, Serializable> getMissionDetails(
+			@RequestParam(value = "missionID", required = false, defaultValue = "null") String missionID)
+			throws Exception {
+		logger.info("in get getMissionDetails" + missionID);
+		return missionService.getMissionDetailsService(missionID);
+	}
+
+	@GetMapping("/shuttle")
+	public Map<String, ?> getMissionForShuttle(
+			@RequestParam(value = "missionID", required = true, defaultValue = "null") String missionID)
+			throws Exception {
+		logger.info("in get getMissionDetails" + missionID);
+
+
+		
+		
+		return missionService.getMissionDetailsshuttle(missionID);
+	}
+
+	@GetMapping("/edit")
+	public Map<String, Serializable> getMissionForEdit(
 			@RequestParam(value = "missionID", required = true, defaultValue = "null") String missionID)
 			throws Exception {
 		logger.info("in get getMissionDetails" + missionID);
