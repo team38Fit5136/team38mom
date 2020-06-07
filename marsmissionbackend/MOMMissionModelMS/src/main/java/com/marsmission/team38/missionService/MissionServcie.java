@@ -318,11 +318,11 @@ public class MissionServcie {
 
 	}
 
-	// Method for getting mission details using missionID or missionName
+	// Method for getting mission details without using missionID or missionName
 	public Map<String, Serializable> getMissionDetailsService(String missionID) {
 		logger.info("in getMissionDetailsService");
 
-		Map<String, Serializable> result = missionDAO.getMissiondetailsDAO(missionID);
+		Map<String, Serializable> result = (Map<String, Serializable>) missionDAO.getMissiondetailsDAOAll(missionID);
 		if (result.get("status").toString().equalsIgnoreCase("failed")) {
 			logger.error(" mission does not exist with given credentials");
 			result.put("responseMsg", "mission doesnot exist with given credentials");
@@ -330,15 +330,7 @@ public class MissionServcie {
 		return result;
 	}
 
-	// Method for updating mission details using missionID or missionName
-	public Map<String, Serializable> updateMissionDetailsService(String missionID, Map<String, ?> props) {
-		logger.info("in updateMissionDetailsService ");
-		// updating mission details
-		Map<String, Serializable> result = missionDAO.updatedetailsDAO(missionID, props);
-
-		return result;
-	}
-
+// for mission to shuttle getting mission details with using missionID or missionName
 	public Map<String, ?> getMissionDetailsshuttle(String missionID) {
 		logger.info("in getMissionDetailsService");
 
@@ -410,5 +402,14 @@ public class MissionServcie {
 
 		return total;
 
+	}
+
+	// Method for updating mission details using missionID or missionName
+	public Map<String, Serializable> updateMissionDetailsService(String missionID, Map<String, ?> props) {
+		logger.info("in updateMissionDetailsService ");
+		// updating mission details
+		Map<String, Serializable> result = missionDAO.updatedetailsDAO(missionID, props);
+
+		return result;
 	}
 }
