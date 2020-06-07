@@ -250,9 +250,12 @@ public class MissionServcie {
 		cargoForOtherMission.transferTo(dest);
 
 		// Making file readable
-		FileReader cargoForJourneyFileReader = new FileReader(cargoFilesPath + cargoForJourneyFileName);
-		FileReader cargoForMissionFileReader = new FileReader(cargoFilesPath + cargoForMissionFileName);
-		FileReader cargoForOtherMissionReader = new FileReader(cargoFilesPath + cargoForOtherMissionFileName);
+		FileReader cargoForJourneyFileReader = new FileReader(
+				cargoFilesPath + missionID + "_" + cargoForJourneyFileName);
+		FileReader cargoForMissionFileReader = new FileReader(
+				cargoFilesPath + missionID + "_" + cargoForMissionFileName);
+		FileReader cargoForOtherMissionReader = new FileReader(
+				cargoFilesPath + missionID + "_" + cargoForOtherMissionFileName);
 
 		// Getting as json object of each file
 		String completeObject = "{";
