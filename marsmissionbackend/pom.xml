@@ -92,19 +92,7 @@
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
-		</pluginRepository>
-		<!-- <pluginRepository> -->
-		<!-- <id>cogknit</id> -->
-		<!-- <url>file:///Users/magic/.m2/repository</url> -->
-		<!-- <url>http://192.168.0.59</url> -->
-		<!-- <url>localhost</url> -->
-		<!-- <releases> -->
-		<!-- <enabled>true</enabled> -->
-		<!-- </releases> -->
-		<!-- <snapshots> -->
-		<!-- <enabled>true</enabled> -->
-		<!-- </snapshots> -->
-		<!-- </pluginRepository> -->
+		
 		
 		<pluginRepository>
 			<id>repository.springframework.maven.milestone</id>
